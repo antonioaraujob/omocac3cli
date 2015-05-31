@@ -228,16 +228,54 @@ void Mutation::doDirectedMutation(QList<Individual *> population, double std, do
             setStdDeviation(std);
 
             // hacer la mutacion dirigida
-            // escribir una funcion
             directedMutation(grid, father, stdMin, stdMax);
-
-            // agregar el father
-            //newPopulation.append(father);
         }
         else
         {
             // hacer la mutacion gausiana con el papa como patron
             // escribir una funcion
+            originalMutation(father, std, stdMin, stdMax, deployedAp);
+        }
+
+    }
+
+}
+
+
+void Mutation::doDirectedMutation(QList<Individual *> population, double std, double stdMin, double stdMax,
+                                  int deployedAp, double dMutationProbability, CTable * ctable)
+{
+    // ejecutar el proceso de mutacion de acuerdo al conocimiento de la tabla C del espacio de creencias
+
+    qDebug("Mutation::doDirectedMutation con probabilidad %f", dMutationProbability);
+
+    newPopulation.clear();
+
+    double randomNumber = 0;
+
+    Individual * father;
+
+    // recorrer la lista de poblacion
+    for (int i=0; i<population.count(); i++)
+    {
+        father = population.at(i);
+        randomNumber = getRandomUniform();
+
+        qDebug("Numero aleatorio: %f", randomNumber);
+        qDebug("dMutationProbability: %f", dMutationProbability);
+
+        if (randomNumber < dMutationProbability)
+        {
+            qDebug("--> directedMutation()");
+
+            setStdDeviation(std);
+
+            // hacer la mutacion dirigida
+            directedMutation(ctable, father);
+        }
+        else
+        {
+            // hacer la mutacion gausiana con el papa como patron
             originalMutation(father, std, stdMin, stdMax, deployedAp);
         }
 
@@ -1304,6 +1342,58 @@ void Mutation::directedMutation(NormativeGrid *grid, Individual *father, double 
 
 
 }
+
+
+void Mutation::directedMutation(CTable * ct, Individual * father)
+{
+    QList<CTableGen *> windowGenesList = ct->getWindowGenes();
+    Individual * offspring = new Individual(*father);
+
+    QList<CTableGen*> convertedIndividual = ct->convertIndividualToCTableGen(offspring);
+
+    CTableGen * gen;
+    CTableGen * tmpGen;
+
+    int index = 0;
+
+    for (int i=0; i< windowGenesList.size(); i++)
+    {
+        gen = windowGenesList.at(i);
+
+        // gen temporal del hijo
+        tmpGen = convertedIndividual.at(i);
+
+        // indice del canal en el cual se debe colocar el nuevo canal
+        index = ct->searchChannelInList(gen->getChannel(), convertedIndividual);
+
+        // reemplazar
+        if (index == -1)
+        {
+            convertedIndividual.replace(i, gen);
+        }else{ // permutar
+            convertedIndividual.replace(i,gen);
+            convertedIndividual.replace(index, tmpGen);
+        }
+        index = 0;
+    }
+
+    // en este punto ya convertedIndividual esta completamente mutado, ahora devolver el cambio
+    for (int i=0; i<offspring->getIndividualSize(); i++)
+    {
+        offspring->setParameter((i*4), convertedIndividual.at(i)->getChannel());
+        offspring->setParameter(((i*4)+1), convertedIndividual.at(i)->getMinChannelTime());
+        offspring->setParameter(((i*4)+2), convertedIndividual.at(i)->getMaxChannelTime());
+        offspring->setParameter(((i*4)+3), convertedIndividual.at(i)->getAPs());
+    }
+    offspring->calculateDiscoveryValue();
+    offspring->calculateLatencyValue();
+
+    // agregar el individuo padre y el individuo hijo a la lista newPopulation para mantener tamano 2p
+    newPopulation.append(father);
+    newPopulation.append(offspring);
+}
+
+
 
 
 void Mutation::setStdDeviation(double std)

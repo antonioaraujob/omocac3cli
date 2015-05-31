@@ -463,11 +463,11 @@ Individual::Individual(bool smart, QString sequence)
     calculateLatencyValue();
 }
 
-Individual::Individual(Individual &p)
+Individual::Individual(const Individual &p)
 {
     // iterar de acuerdo al tamano del individuo
     //for (int i=0; i<44; i++)
-    int numParameters = getNumberOfParameters();
+    int numParameters = p.getNumberOfParameters();
     for (int i=0; i<numParameters; i++)
     {
         parametersList.append(p.getParameter(i));
@@ -495,12 +495,12 @@ Individual::Individual(Individual &p)
     calculateLatencyValue();
 }
 
-int Individual::getIndividualId()
+int Individual::getIndividualId() const
 {
     return individualId;
 }
 
-int Individual::getIndividualSize()
+int Individual::getIndividualSize() const
 {
     return individualSize;
 }
@@ -967,7 +967,7 @@ void Individual::setWonMatchesCounter(int value)
     wonMatchesCounter = value;
 }
 
-int Individual::getWonMatchesCounter()
+int Individual::getWonMatchesCounter() const
 {
     return wonMatchesCounter;
 }
@@ -1190,12 +1190,12 @@ double Individual::probabilityOfFindingAllAps(double delay)
 }
 
 
-bool Individual::getEmulateScanning()
+bool Individual::getEmulateScanning() const
 {
     return emulateScanning;
 }
 
-int Individual::getNscanForMutation()
+int Individual::getNscanForMutation() const
 {
     return nscansForMutation;
 }
@@ -1333,5 +1333,8 @@ void Individual::getAverageOnFullScanning(){
 }
 
 
-
+double Individual::getBestIndexFoValue(int channelIndex)
+{
+    return getParameter(channelIndex);
+}
 

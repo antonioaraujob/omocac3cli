@@ -33,7 +33,9 @@ SOURCES += main.cpp \
     selection.cpp \
     mutation.cpp \
     cell.cpp \
-    gen.cpp
+    gen.cpp \
+    ctable.cpp \
+    ctablegen.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -46,4 +48,6 @@ HEADERS += \
     selection.h \
     mutation.h \
     cell.h \
-    gen.h
+    gen.h \
+    ctable.h \
+    ctablegen.h

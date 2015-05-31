@@ -145,6 +145,16 @@ private:
      */
     bool useSmartIndividual;
 
+    /**
+     * @brief Tamano de la ventana de la tabla C del espacio de creencias para la mutacion dirigida
+     */
+    int ctableWindow;
+
+    /**
+     * @brief Indice para ordenar la tabla C del espacio de creencias para la mutacion dirigida
+     */
+    int indexToSortCTable;
+
 public:
 
     /**

@@ -28,13 +28,25 @@ inline static bool xLessThanF2(Individual *p1, Individual *p2)
 }
 
 /**
+ * @brief Funcion de comparacion de CTableGen con respecto al valor de channel
+ * @param gen1 gen 1 a comparar
+ * @param gen2 gen 2 a comparar
+ * @return Verdadero si gen1 es menor que gen2 con respecto al canal
+ */
+inline static bool gen1LessThanGen2ByChannel(CTableGen * gen1, CTableGen * gen2)
+{
+    return gen1->getChannel() < gen2->getChannel();
+}
+
+/**
  * @brief Define e inicializa el miembro estatico individualIdCounter
  */
 int Simulation::individualIdCounter = 0;
 
 
 Simulation::Simulation(int population, int extFileSize, int generations, int subintervalsGrid, int genNormative,
-                       int matches, int stdDev, int stdDevMin, int stdDevMax, int aps, bool dMutation, double dMutationProbability)
+                       int matches, int stdDev, int stdDevMin, int stdDevMax, int aps, bool dMutation, double dMutationProbability,
+                       int indSize, int ctableWindow, int indToSortCTable)
 {
     populationSize = population;
 
@@ -62,6 +74,8 @@ Simulation::Simulation(int population, int extFileSize, int generations, int sub
 
     directedMutationProbability = dMutationProbability;
 
+    individualSize = indSize;
+
     normativePhenotipicPart = new NormativePhenotypicPart();
 
     externalFile = new ExternalFile(extFileSize);
@@ -69,6 +83,10 @@ Simulation::Simulation(int population, int extFileSize, int generations, int sub
     mutation = new Mutation();
 
     selection = new Selection();
+
+    ctable = new CTable(individualSize, ctableWindow, indToSortCTable);
+
+    indexToSortCTable = indToSortCTable;
 
     qDebug("Simulation:");
     qDebug("    tamano de la poblacion: %d", populationSize);
@@ -79,6 +97,7 @@ Simulation::Simulation(int population, int extFileSize, int generations, int sub
     qDebug("    desviacion estandar min: %d", stdDeviationMinChannelTime);
     qDebug("    desviacion estandar max : %d", stdDeviationMaxChannelTime);
     qDebug("    numero de APs desplegados: %d", deployedAPs);
+    qDebug("    tamano de ventana de CTable: %d", ctableWindow);
 }
 
 
@@ -251,6 +270,141 @@ void Simulation::initializeGrid()
 
 }
 
+/*
+void Simulation::initializeCTable()
+{
+    // aqui se debe obtener el super individuo inicial
+
+    QList<CTableGen *> superIndividualGenList;
+
+    Individual * individual;
+    CTableGen * gen;
+
+    QList<double> indexFOValueList;
+
+    for (int i=0; i<populationList.size(); i++)
+    {
+        individual = populationList.at(i);
+        individual->getAverageOnFullScanning();
+        //indexFOValueList.append(individual->getPerformanceDiscovery());
+    }
+    qSort(populationList.begin(), populationList.end(), xLessThanF1);
+    int population = populationList.size();
+    Individual * bestIndividual = populationList.at(population-1);
+
+    // indice para ordenar
+    // indexToSortCTable
+
+    int ch = 0;
+    double max = 0;
+    double min = 0;
+    double aps = 0;
+
+    for (int j=0; j<individual->getIndividualSize(); j++)
+    {
+        ch = bestIndividual->getParameter(j*4);
+        min = bestIndividual->getParameter((j*4)+1);
+        max = bestIndividual->getParameter((j*4)+2);
+        aps = bestIndividual->getParameter((j*4)+3);
+        gen = new CTableGen(ch, min, max, aps, indexToSortCTable, 0, 0);
+        superIndividualGenList.append(gen);
+    }
+    Q_ASSERT(superIndividualGenList.size() == individual->getIndividualSize());
+
+    // el ordenamiento de CTable se hace internamente en la funcion
+    // void addSuperIndividual(QList<CTableGen *> superIndividualGenList, int indexToSort);
+    addSuperIndividual(superIndividualGenList, indexToSortCTable);
+
+    return;
+}
+*/
+
+void Simulation::initializeCTable()
+{
+    // aqui se debe obtener el super individuo inicial
+    QList<CTableGen *> superIndividualGenList;
+
+    QList<CTableGen *> individualConverted;
+    QList< QList<CTableGen *> > populationConvertedList;
+
+
+    Individual * individual;
+
+
+    for (int i=0; i<populationList.size(); i++)
+    {
+        // obtener el individuo
+        individual = populationList.at(i);
+        // calcular el promedio de APi
+        individual->getAverageOnFullScanning();
+
+
+        // convertir el individuo a lista de genes
+        individualConverted = ctable->convertIndividualToCTableGen(individual);
+        // ordenar la lista de genes con respecto al canal
+        qSort(individualConverted.begin(), individualConverted.end(), gen1LessThanGen2ByChannel);
+        // calcular los valores de los indices indexA, indexB, indexC para cada canal
+        for (int j=0; j<individualConverted.size(); j++)
+        {
+            individualConverted.at(j)->calculateIndexA();
+            individualConverted.at(j)->calculateIndexB();
+            individualConverted.at(j)->calculateIndexC();
+        }
+
+        populationConvertedList.append(individualConverted);
+
+    }
+
+    int n = populationConvertedList.size();
+    QList<CTableGen *> test = populationConvertedList.at(0);
+    int t = test.size();
+    QList<CTableGen *> test2 = populationConvertedList.at(1);
+    int t2 = test.size();
+    qDebug("espera");
+
+
+    CTableGen * maxGen;
+    CTableGen * auxGen;
+    CTableGen * finalGen;
+
+    for (int k=0; k<individual->getIndividualSize(); k++)
+    {
+        maxGen = populationConvertedList.at(0).at(k);
+        auxGen = populationConvertedList.at(0).at(k);
+
+        for (int l=0; l<populationConvertedList.size(); l++)
+        {
+            if (indexToSortCTable == 0)
+            {
+                auxGen = populationConvertedList.at(l).at(k);
+                if (auxGen->getIndexA() > maxGen->getIndexA())
+                {
+                    maxGen = populationConvertedList.at(l).at(k);
+                }
+            }else if (indexToSortCTable == 1)
+            {
+                auxGen = populationConvertedList.at(l).at(k);
+                if (auxGen->getIndexB() > maxGen->getIndexB())
+                {
+                    maxGen = populationConvertedList.at(l).at(k);
+                }
+            }else // 2 indexC
+            {
+                auxGen = populationConvertedList.at(l).at(k);
+                if (auxGen->getIndexC() > maxGen->getIndexC())
+                {
+                    maxGen = populationConvertedList.at(l).at(k);
+                }
+            }
+        }
+        // consegui el maximo del canal
+        finalGen = new CTableGen(*maxGen);
+        superIndividualGenList.append(finalGen);
+    }
+    // el ordenamiento de CTable se hace internamente en la funcion
+    // void addSuperIndividual(QList<CTableGen *> superIndividualGenList, int indexToSort);
+    ctable->addSuperIndividual(superIndividualGenList, indexToSortCTable);
+}
 
 void Simulation::updateNormativePhenotypicPart()
 {
@@ -396,6 +550,108 @@ void Simulation::updateGrid(QList<Individual *> nonDominated)
     }
 }
 
+
+void Simulation::updateCTable(QList<Individual *> newNonDominatedIndividualsFromEF)
+{
+    // aqui se debe actualizar el superindividuo de CTable tomando los nuevos individuos agregados
+    // al archivo externo; similar a la actualizacion de la grid
+
+
+
+    // aqui se debe obtener el super individuo inicial
+    QList<CTableGen *> superIndividualGenList;
+
+    QList<CTableGen *> individualConverted;
+    QList< QList<CTableGen *> > populationConvertedList;
+
+
+    Individual * individual;
+
+
+    for (int i=0; i<newNonDominatedIndividualsFromEF.size(); i++)
+    {
+        // obtener el individuo
+        individual = newNonDominatedIndividualsFromEF.at(i);
+        // calcular el promedio de APi
+        individual->getAverageOnFullScanning();
+
+
+        // convertir el individuo a lista de genes
+        individualConverted = ctable->convertIndividualToCTableGen(individual);
+        // ordenar la lista de genes con respecto al canal
+        qSort(individualConverted.begin(), individualConverted.end(), gen1LessThanGen2ByChannel);
+        // calcular los valores de los indices indexA, indexB, indexC para cada canal
+        for (int j=0; j<individualConverted.size(); j++)
+        {
+            individualConverted.at(j)->calculateIndexA();
+            individualConverted.at(j)->calculateIndexB();
+            individualConverted.at(j)->calculateIndexC();
+        }
+
+        populationConvertedList.append(individualConverted);
+
+    }
+/*
+    int n = populationConvertedList.size();
+    QList<CTableGen *> test = populationConvertedList.at(0);
+    int t = test.size();
+    QList<CTableGen *> test2 = populationConvertedList.at(1);
+    int t2 = test.size();
+    qDebug("espera");
+*/
+
+    CTableGen * maxGen;
+    CTableGen * auxGen;
+    CTableGen * finalGen;
+
+    for (int k=0; k<individual->getIndividualSize(); k++)
+    {
+        maxGen = populationConvertedList.at(0).at(k);
+        auxGen = populationConvertedList.at(0).at(k);
+
+        for (int l=0; l<populationConvertedList.size(); l++)
+        {
+            if (indexToSortCTable == 0)
+            {
+                auxGen = populationConvertedList.at(l).at(k);
+                if (auxGen->getIndexA() > maxGen->getIndexA())
+                {
+                    maxGen = populationConvertedList.at(l).at(k);
+                }
+            }else if (indexToSortCTable == 1)
+            {
+                auxGen = populationConvertedList.at(l).at(k);
+                if (auxGen->getIndexB() > maxGen->getIndexB())
+                {
+                    maxGen = populationConvertedList.at(l).at(k);
+                }
+            }else // 2 indexC
+            {
+                auxGen = populationConvertedList.at(l).at(k);
+                if (auxGen->getIndexC() > maxGen->getIndexC())
+                {
+                    maxGen = populationConvertedList.at(l).at(k);
+                }
+            }
+        }
+        // consegui el maximo del canal
+        finalGen = new CTableGen(*maxGen);
+        superIndividualGenList.append(finalGen);
+    }
+
+    // ejecutar el proceso de limpiar (registrar antiguo super individuo) en CTable
+    if (newNonDominatedIndividualsFromEF.size()>0)
+    {
+        ctable->clearCTable();
+        // el ordenamiento de CTable se hace internamente en la funcion
+        ctable->addSuperIndividual(superIndividualGenList, indexToSortCTable);
+    }
+
+
+
+}
+
+
 void Simulation::printGrid()
 {
     nGrid->printGrid();
@@ -406,7 +662,10 @@ void Simulation::mutatePopulation()
     // utilizar la mutación dirigida
     if (directedMutation)
     {
-        mutation->doDirectedMutation(populationList, getStdDeviation(), stdDeviationMinChannelTime, stdDeviationMaxChannelTime, deployedAPs, directedMutationProbability, nGrid);
+        //mutation->doDirectedMutation(populationList, getStdDeviation(), stdDeviationMinChannelTime, stdDeviationMaxChannelTime,
+        //                             deployedAPs, directedMutationProbability, nGrid);
+        mutation->doDirectedMutation(populationList, getStdDeviation(), stdDeviationMinChannelTime, stdDeviationMaxChannelTime,
+                                     deployedAPs, directedMutationProbability, ctable);
     }
     else
     {

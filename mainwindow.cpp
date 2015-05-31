@@ -117,6 +117,10 @@ MainWindow::MainWindow()
 
     useSmartIndividual = settings.value("usarIndividuosInteligentes").toBool();
 
+    ctableWindow = settings.value("tamanoDeVentanaCTable").toInt();
+
+    indexToSortCTable = settings.value("indiceParaOrdenarTablaC").toInt();
+
     // base de datos sqlite
     QString database("test_18.1.db");
     //QString database("database.db");
@@ -151,7 +155,6 @@ void MainWindow::executeAlgorithm()
     }
     */
 
-
     // creacion del objeto simulacion
     simulation = new Simulation(population,
                                 externalFileSize,
@@ -164,7 +167,10 @@ void MainWindow::executeAlgorithm()
                                 standarDeviationMaxChannelTime,
                                 25,
                                 doDirectedMutation,
-                                mutationProbability);
+                                mutationProbability,
+                                individualSize,
+                                ctableWindow,
+                                indexToSortCTable);
     /*
                 ui->lineEditPopulationSize->text().toInt(),
                                 ui->lineEditExternalFileSize->text().toInt(),
@@ -227,6 +233,8 @@ void MainWindow::executeAlgorithm()
     simulation->initializeGrid();
     qDebug("...se acaba de inicializar la grid");
 
+    // inicializar la tabla C del espacio de creencias
+    simulation->initializeCTable();
 
     // lista de individuos no dominados
     QList<Individual *> nonDominatedList;
@@ -296,6 +304,11 @@ void MainWindow::executeAlgorithm()
         // actualizar la rejilla con todos los individuos no dominados recien agregados al archivo externo
         // durante la generación actual
         simulation->updateGrid(simulation->getExternalFile()->getCurrentGenerationIndividualList());
+
+        // actualizar la tabla C del espacio de creencias todos los individuos no dominados recien agregados al archivo externo
+        // durante la generación actual
+        simulation->updateCTable(simulation->getExternalFile()->getCurrentGenerationIndividualList());
+
         simulation->getExternalFile()->resetCurrentGenerationIndividualList();
         qDebug("...despues de actualizar la rejilla");
 

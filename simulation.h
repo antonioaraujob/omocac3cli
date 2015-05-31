@@ -10,6 +10,7 @@
 #include "externalfile.h"
 #include "mutation.h"
 #include "selection.h"
+#include "ctable.h"
 
 
 /**
@@ -128,6 +129,11 @@ private:
     double directedMutationProbability;
 
     /**
+     * @brief Tamano del individuo durante la simulacion
+     */
+    int individualSize;
+
+    /**
      * @brief Mutacion de la poblacion.
      *
      * Este objeto se encargara de crear una nueva poblacion de tamano 2p a partir
@@ -150,6 +156,17 @@ private:
      */
     QList<Individual *> outOfGridIndividualList;
 
+
+    /**
+     * @brief Tabla C del espacio de creencia para la mutacion dirigida
+     */
+    CTable * ctable;
+
+    /**
+     * @brief Indice utilizado para ordenar la tabla C del espacio de creencias
+     */
+    int indexToSortCTable;
+
 public:
 
     /**
@@ -168,11 +185,14 @@ public:
      * @param aps numero de APs desplegados en el entorno
      * @param directedMutation Verdadero si se utilizara la mutacion dirigida
      * @param directedMutationProbability Probabilidad de ocurrencia de la mutacion dirigida
-     *
+     * @param indSize tamano del individuo en la simulacion
+     * @param ctableWindow tamano de la ventana de la tabla C del espacio de creencias
+     * @param indexToSortCTable indice usado para ordenar la tabla C
      *
      */
     Simulation(int population, int extFileSize, int generations, int subintervalsGrid, int genNormative,
-               int matches, int stdDev, int stdDevMin, int stdDevMax, int aps, bool dMutation, double dMutationProbability);
+               int matches, int stdDev, int stdDevMin, int stdDevMax, int aps, bool dMutation, double dMutationProbability,
+               int indSize, int ctableWindow, int indToSortCTable);
 
     /**
      * @brief Destructor de la clase
@@ -232,6 +252,11 @@ public:
      */
     void initializeGrid();
 
+    /**
+     * @brief Inicializa la tabla C del espacio de creencias para la mutacion dirigida
+     */
+    void initializeCTable();
+
     // actualizar el espacio de creencias
     /**
      * @brief Actualiza la parte fenotipica normativa
@@ -246,6 +271,14 @@ public:
      * generacion actual
      */
     void updateGrid(QList<Individual *> nonDominated);
+
+    /**
+     * @brief Actualiza la tabla C del espacio de creencias para la mutacion dirigida
+     *
+     * @param nonDominated lista de individuos no dominados agregados al archivo externo en la
+     * generacion actual
+     */
+    void updateCTable(QList<Individual *> newNonDominatedIndividualsFromEF);
 
     /**
      * @brief Imprime la rejilla del espacio de creencia actual

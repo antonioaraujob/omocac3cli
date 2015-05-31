@@ -6,6 +6,7 @@
 
 #include "individual.h"
 #include "normativegrid.h"
+#include "ctable.h"
 
 #include "scan.h"
 
@@ -78,6 +79,17 @@ public:
      */
     void doDirectedMutation(QList<Individual *> population, double std, double stdMin, double stdMax, int deployedAp,
                             double dMutationProbability, NormativeGrid * grid);
+
+    /**
+     * @brief Ejecuta el proceso de mutacion dirigida sobre la base de la tabla C
+     * del espacio de creencias.
+     *
+     * @param population poblacion sobre la cual se ejecuta el proceso de mutacion
+     * @param dMutationProbability
+     * @param ctable tabla C del espacio de creencias
+     */
+    void doDirectedMutation(QList<Individual *> population, double std, double stdMin, double stdMax, int deployedAp,
+                            double dMutationProbability, CTable * ctable);
 
     /**
      * @brief Retorna la nueva poblacion luego de la variacion.
@@ -207,6 +219,13 @@ public:
      * @param father Individuo padre para la mutacion
      */
     void directedMutation(NormativeGrid * grid, Individual * father, double stdMin, double stdMax);
+
+    /**
+     * @brief Ejecuta el proceso de mutacion dirigida
+     *
+     * @param ct tabla C del espacio de creencias
+     */
+    void directedMutation(CTable * ct, Individual *father);
 
     /**
      * @brief Asigna la desviacion estandar para la mutacion

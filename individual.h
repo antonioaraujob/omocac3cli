@@ -124,19 +124,19 @@ public:
     /**
      * @brief Constructor copia
      */
-    Individual(Individual &p);
+    Individual(const Individual &p);
 
     /**
      * @brief Retorna el Id del individuo
      * @return Retorna el Id del individuo
      */
-    int getIndividualId();
+     int getIndividualId() const;
 
     /**
      * @brief Retorna el tamano del individuo con respecto al numero de bloques en la cadena de escaneo
      * @return el tamano del individuo con respecto al numero de bloques en la cadena de escaneo
      */
-    int getIndividualSize();
+    int getIndividualSize() const;
 
     /**
      * @brief Retorna un numero de canal aleatorio.
@@ -264,7 +264,7 @@ public:
      * @brief Retorna el contador de encuentros ganados por el individuo en un torneo
      * @return El contador de encuentros ganados por el individuo en un torneo
      */
-    int getWonMatchesCounter();
+    int getWonMatchesCounter() const;
 
     /**
      * @brief Incrementa el contador de encuentros ganados del individuo en un torneo
@@ -325,13 +325,13 @@ public:
      * En otro caso se utiliza el modelo matematico.
      * @return Retorna si se debe emular el scanning de acuerdo a la campana de medicion.
      */
-    bool getEmulateScanning();
+    bool getEmulateScanning() const;
 
     /**
      * @brief Representa el numero de full scanning que se tomaran como referencia para
      * ejecutar el proceso de mutacion del numero de APs
      */
-    int getNscanForMutation();
+    int getNscanForMutation() const;
 
     /**
      * @brief establece un nuevo valor aleatorio para nscans entre 1 y 8
@@ -350,11 +350,23 @@ public:
      */
     void executeFullScanning();
 
-
+    /**
+     * @brief Ejecuta un full scanning del individuo
+     * @return un full scanning del individuo
+     */
     Individual * scanSequence();
 
-
+    /**
+     * @brief getAverageOnFullScanning
+     */
     void getAverageOnFullScanning();
+
+    /**
+     * @brief Retorna el valor FO del canal pasado como argumento
+     * @param channelIndex
+     * @return el valor FO del canal pasado como argumento
+     */
+    double getBestIndexFoValue(int channelIndex);
 };
 
 #endif // INDIVIDUAL_H
