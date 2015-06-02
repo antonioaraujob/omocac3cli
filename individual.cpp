@@ -747,7 +747,7 @@ void Individual::calculateDiscoveryValue()
         {
             for (int i=0; i<individualSize; i++)
             {
-                discovery += ( (parametersList.at((i*4)+3))/(parametersList.at((i*4)+1)) )*0.60 + ( (parametersList.at((i*4)+3))/(parametersList.at((i*4)+2)) )*0.40;
+                discovery += ( (parametersList.at((i*4)+3))/(parametersList.at((i*4)+1)) )*0.40 + ( (parametersList.at((i*4)+3))/(parametersList.at((i*4)+2)) )*0.60;
             }
         }
         else // getIndexToSortCTable() == 2
@@ -1129,8 +1129,6 @@ void Individual::setNewNscansForMutation()
 
 void Individual::executeFullScanning()
 {
-    //Individual * scannedIndividual = new Individual();
-
     //QString database("database.db");
     QString database("test_18.1.db");
     QString experiment("full");
@@ -1138,34 +1136,28 @@ void Individual::executeFullScanning()
     scan.init();
     scan.prepareIRD();
 
-    int tmpAps = 0;
+    double tmpAps = 0;
     int channel = 0;
-    int min = 0;
-    int max = 0;
+    double min = 0;
+    double max = 0;
 
     for (int i=0;i<getIndividualSize(); i++)
     {
         channel = getParameter(i*4);
         min = getParameter((i*4)+1);
         max = getParameter((i*4)+2);
-        tmpAps = scan.getAPs(channel, min, max);
-
-        //scannedIndividual->setParameter((i*4), channel);
-        //scannedIndividual->setParameter(((i*4)+1), min);
-        //scannedIndividual->setParameter(((i*4)+2), max);
+        tmpAps = scan.getAPs(channel, min, max);        
         setParameter(((i*4)+3), tmpAps);
     }
 
     calculateDiscoveryValue();
-    //calculateLatencyValue();
-
-    //return scannedIndividual;
 }
 
 
 
 Individual * Individual::scanSequence()
 {
+/*
     Individual * scannedIndividual = new Individual();
 
     //QString database("database.db");
@@ -1176,10 +1168,10 @@ Individual * Individual::scanSequence()
     scan.init();
     scan.prepareIRD();
 
-    int tmpAps = 0;
+    double tmpAps = 0;
     int channel = 0;
-    int min = 0;
-    int max = 0;
+    double min = 0;
+    double max = 0;
 
     for (int i=0;i<getIndividualSize(); i++)
     {
@@ -1198,11 +1190,41 @@ Individual * Individual::scanSequence()
     scannedIndividual->calculateLatencyValue();
 
     return scannedIndividual;
+*/
+
+
+
+    //QString database("database.db");
+    QString database("test_18.1.db");
+
+    QString experiment("full");
+    ScanningCampaing scan(database.toStdString(),experiment.toStdString(), 0);
+    scan.init();
+    scan.prepareIRD();
+
+    double tmpAps = 0;
+    int channel = 0;
+    double min = 0;
+    double max = 0;
+
+    for (int i=0;i<getIndividualSize(); i++)
+    {
+        channel = getParameter(i*4);
+        min = getParameter((i*4)+1);
+        max = getParameter((i*4)+2);
+        tmpAps = scan.getAPs(channel, min, max);
+    }
+
+    Individual * scannedIndividual = new Individual(*this);
+    scannedIndividual->calculateDiscoveryValue();
+    scannedIndividual->calculateLatencyValue();
+
+    return scannedIndividual;
 }
 
 void Individual::getAverageOnFullScanning(){
 
-    // repetir 10 full scanning antes de evaluar la funcion objetivo 1
+    // repetir 30 full scanning antes de evaluar la funcion objetivo 1
 
     Individual * tmpIndividual;
     QList<Individual*> individualList;
@@ -1216,10 +1238,7 @@ void Individual::getAverageOnFullScanning(){
             tmpIndividual->setParameter(((j*4)+1), getParameter(((j*4)+1)));
             tmpIndividual->setParameter(((j*4)+2), getParameter(((j*4)+2)));
             tmpIndividual->setParameter(((j*4)+3), getParameter(((j*4)+3)));
-
         }
-
-
         tmpIndividual->executeFullScanning();
         individualList.append(tmpIndividual);
         tmpIndividual->printIndividual();

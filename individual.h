@@ -356,7 +356,8 @@ public:
     Individual * scanSequence();
 
     /**
-     * @brief getAverageOnFullScanning
+     * @brief Repite 30 full scanning (consultas al emulador) y calcula el valor promedio de APs
+     * encontrados por cada bloque <ch, min, max> del individuo
      */
     void getAverageOnFullScanning();
 
