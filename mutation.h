@@ -61,9 +61,8 @@ public:
      * @param std desviacion estandar de la variable aleatoria normal
      * @param std desviacion estandar de la variable aleatoria normal MinChannelTime
      * @param std desviacion estandar de la variable aleatoria normal MaxChannelTime
-     * @param deployedAp numero de AP desplegados en el entorno
      */
-    void doMutation(QList<Individual *> population, double std, double stdMin, double stdMax, int deployedAp);
+    void doMutation(QList<Individual *> population, double std, double stdMin, double stdMax);
 
     /**
      * @brief Ejecuta el proceso de mutacion dirigida sobre la base del conocimiento normativo
@@ -73,11 +72,10 @@ public:
      * @param std desviacion estandar de la variable aleatoria normal
      * @param std desviacion estandar de la variable aleatoria normal MinChannelTime
      * @param std desviacion estandar de la variable aleatoria normal MaxChannelTime
-     * @param deployedAp numero de AP desplegados en el entorno
-     * @param dMutationProbability
+     * @param dMutationProbability probabilidad de ejecutar la mutacion dirigida
      * @param grid Puntero a la rejilla
      */
-    void doDirectedMutation(QList<Individual *> population, double std, double stdMin, double stdMax, int deployedAp,
+    void doDirectedMutation(QList<Individual *> population, double std, double stdMin, double stdMax,
                             double dMutationProbability, NormativeGrid * grid);
 
     /**
@@ -85,10 +83,13 @@ public:
      * del espacio de creencias.
      *
      * @param population poblacion sobre la cual se ejecuta el proceso de mutacion
-     * @param dMutationProbability
+     * @param std desviacion estandar de la variable aleatoria normal
+     * @param std desviacion estandar de la variable aleatoria normal MinChannelTime
+     * @param std desviacion estandar de la variable aleatoria normal MaxChannelTime
+     * @param dMutationProbability probabilidad de ejecutar la mutacion dirigida
      * @param ctable tabla C del espacio de creencias
      */
-    void doDirectedMutation(QList<Individual *> population, double std, double stdMin, double stdMax, int deployedAp,
+    void doDirectedMutation(QList<Individual *> population, double std, double stdMin, double stdMax,
                             double dMutationProbability, CTable * ctable);
 
     /**
@@ -210,7 +211,7 @@ public:
      * @param std desviacion estandar de la distribucion normal (parametro del algoritmo)
      * @param deployedAp numero de APs desplegados
      */
-    void originalMutation(Individual * father, double std, double stdMin, double stdMax, int deployedAp);
+    void originalMutation(Individual * father, double std, double stdMin, double stdMax);
 
     /**
      * @brief Ejecuta la mutacion dirigida

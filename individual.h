@@ -93,9 +93,8 @@ public:
     /**
      * @brief Constructor de la clase
      *
-     * @param numberOfApsDeployed Numero de APs desplegados
      */
-    Individual(int numberOfApsDeployed);
+    Individual();
 
     /**
      * @brief Constructor de un individuo pseudointeligentes por la influencia de

@@ -121,7 +121,7 @@ Individual::Individual(int numberOfApsDeployed)
 */
 
 
-Individual::Individual(int numberOfApsDeployed)
+Individual::Individual()
 {
     //qsrand((uint)QTime::currentTime().msec());
 
@@ -138,16 +138,12 @@ Individual::Individual(int numberOfApsDeployed)
     //nscansForMutation = qrand() % ((8 + 1) - 1) + 1;
     nscansForMutation = 1;
 
-    // se deben crear los 33 parametros
-    // C1,Min1,Max1,AP1,C2,Min2,Max2,AP2,...,C11,Min11,Max11,AP11
-
+    // contador de torneos ganados inicializado en 0
+    wonMatchesCounter = 0;
 
     // base de datos sqlite
-    //QString database("/home/antonio/Copy/2014/pgcomp/ia/gridCells/gridCells/test_18.1.db");
-    //QString database("/home/antonio/desarrollo/iaa/git/omocac/test_18.1.db");
     QString database("test_18.1.db");
     //QString database("database.db");
-
 
     // tipo de experimento para extraer las muestras: full -> full scanning
     QString experiment("full");
@@ -158,94 +154,35 @@ Individual::Individual(int numberOfApsDeployed)
     scan.init();
     scan.prepareIRD();
 
-    //Scan::ScanResults results = scan.execute(11, 10, 30);
-    ScanningCampaing::ScanResults results;
-
-    //std::cout << results.size() << " results: " << std::endl;
-
     int randomChannel = 0;
     double minChannelTime = 0;
     double maxChannelTime = 0;
 
     double apsFound = 0;
 
-
-    // iterar de acuerdo al tamano del individuo
-    //for (int i=0; i<11; i++)
+    // iterar de acuerdo al tamano del individuo para crear los parametros
+    // C1,Min1,Max1,AP1,C2,Min2,Max2,AP2,...,C11,Min11,Max11,AP11
     for (int i=0; i<individualSize; i++)
     {
         randomChannel = getRandomChannel();
         parametersList.append(randomChannel);
 
         minChannelTime = getRandomMinChannelTime();
-        maxChannelTime = getRandomMaxChannelTime();
         parametersList.append(minChannelTime);
+
+        maxChannelTime = getRandomMaxChannelTime();
         parametersList.append(maxChannelTime);
 
-        //parametersList.append(getAPNumberOnChannel(numberOfApsDeployed, randomChannel));
-
-        //qDebug("**channel: %d, min: %f, max: %f",randomChannel, minChannelTime, maxChannelTime);
-        //results = scan.execute(randomChannel, minChannelTime, maxChannelTime);
-
-        // nueva funcion para obtener el numero de AP de acuerdo a la campana de medicion
-        //results = scan.randomScan(randomChannel, minChannelTime, maxChannelTime);
-        //results = MainWindow::getRandomScan(randomChannel, minChannelTime, maxChannelTime);
-
-        //apsFound = MainWindow::getAPs(randomChannel, minChannelTime, maxChannelTime);
         apsFound = scan.getAPs(randomChannel, minChannelTime, maxChannelTime);
-
-        //qDebug("**numero de APs encontrados en el canal %d: %d",randomChannel, apsFound);
-        //std::cout << " numero de APs encontrados en el canal: " << randomChannel << ": " << results.size() << std::endl;
-        //qDebug("**scan.execute(%d, %f, %f)=%d",randomChannel, minChannelTime, maxChannelTime, results.size());
-
-        //parametersList.append(results.size());
-
         parametersList.append(apsFound);
 
-        wonMatchesCounter = 0;
+        qDebug("**channel: %d, min: %f, max: %f, aps: %f",randomChannel, minChannelTime, maxChannelTime, apsFound);
     }
-
-
-/*
-    // antes de mutar
-    Individual * ind1 = scanSequence();
-    Individual * ind2 = scanSequence();
-    Individual * ind3 = scanSequence();
-
-    QList<Individual *> list;
-    list.append(ind1);
-    list.append(ind2);
-    list.append(ind3);
-
-    qSort(list.begin(), list.end(), individual1LessThanIndividual2);
-    Individual * indivitualToReturn = list.at(list.size()-1);
-
-    Individual * newOffspring = new Individual(0);
-    int channel=0;
-    int min=0;
-    int max=0;
-    int aps=0;
-
-    for (int j=0;j<getIndividualSize(); j++)
-    {
-        channel = indivitualToReturn->getParameter(j*4);
-        min = indivitualToReturn->getParameter((j*4)+1);
-        max = indivitualToReturn->getParameter((j*4)+2);
-        aps = indivitualToReturn->getParameter((j*4)+3);
-
-        newOffspring->setParameter((j*4),channel);
-        newOffspring->setParameter(((j*4)+1),min);
-        newOffspring->setParameter(((j*4)+2),max);
-        newOffspring->setParameter(((j*4)+3),aps);
-    }
-*/
 
     // calcular el valor de desempeno para la descubierta
-    //setPerformanceDiscovery(getRandomMaxChannelTime());
     calculateDiscoveryValue();
 
     // calcular el valor de desempeno para la latencia
-    //setPerformanceLatency(getRandomMaxChannelTime());
     calculateLatencyValue();
 }
 
@@ -466,7 +403,6 @@ Individual::Individual(bool smart, QString sequence)
 Individual::Individual(const Individual &p)
 {
     // iterar de acuerdo al tamano del individuo
-    //for (int i=0; i<44; i++)
     int numParameters = p.getNumberOfParameters();
     for (int i=0; i<numParameters; i++)
     {
@@ -483,15 +419,10 @@ Individual::Individual(const Individual &p)
 
     wonMatchesCounter = p.getWonMatchesCounter();
 
-    // calcular el valor de desempeno para el individuo
-    //calculatePerformanceValue();
-
     // calcular el valor de desempeno para la descubierta
-    //setPerformanceDiscovery(getRandomMaxChannelTime());
     calculateDiscoveryValue();
 
     // calcular el valor de desempeno para la latencia
-    //setPerformanceLatency(getRandomMaxChannelTime());
     calculateLatencyValue();
 }
 
@@ -508,13 +439,6 @@ int Individual::getIndividualSize() const
 
 int Individual::getRandomChannel()
 {
-/*
-    // el rango es 1 <= channel <= 11
-    int low = 1;
-    int high = 11;
-    return qrand() % ((high + 1) - low) + low;
-*/
-
     int low = 1;
     int high = 11;
     int value = 0;
@@ -534,20 +458,15 @@ int Individual::getRandomChannel()
 
 double Individual::getRandomMinChannelTime()
 {
-    // el rango es 3 <= MinChannelTime <= 12 en ms
-
-    // se esta restringiendo el hecho de que el MinChannelTime sea 3
-    int low = 5;
-    int high = 15;
+    int low = MainWindow::getLowerMinChannelTime();
+    int high = MainWindow::getUpperMinChannelTime();
     return qrand() % ((high + 1) - low) + low;
 }
 
 double Individual::getRandomMaxChannelTime()
 {
-
-    // el rango es 10 <= MaxChannelTime <= 150
-    int low = 10;
-    int high = 90;
+    int low = MainWindow::getLowerMaxChannelTime();
+    int high = MainWindow::getUpperMaxChannelTime();
     return qrand() % ((high + 1) - low) + low;
 }
 
@@ -792,19 +711,13 @@ void Individual::calculatePerformanceValue()
 
     // se deben calcular los valores de las funciones objetivo para el individuo
 
-
     // D = Sumatoria i=1,11 Pi*di
     performanceDiscovery = 0;
-
-
     performanceLatency = 0;
-
-
 }
 
 void Individual::calculateDiscoveryValue()
 {
-
     double api = 0;
     double discovery = 0;
     double probOfAtLeastOneAP = 0;
@@ -822,21 +735,27 @@ void Individual::calculateDiscoveryValue()
         */
 
         // ********************************************************************************************************
-        // codigo para probar funcion objetivo = ((Suma AP_i)/minchannel_i)*0.20 + ((Suma AP_i)/maxchannel_i)*0.80
-/*
-        for (int i=0; i<individualSize; i++)
+        // codigo para probar funcion objetivo = ((Suma AP_i)/minchannel_i)*X + ((Suma AP_i)/maxchannel_i)*Y
+
+        if (MainWindow::getIndexToSortCTable() == 0 )
         {
-            discovery += ( (parametersList.at((i*4)+3))/(parametersList.at((i*4)+1)) )*0.20 + ( (parametersList.at((i*4)+3))/(parametersList.at((i*4)+2)) )*0.80;
+            for (int i=0; i<individualSize; i++)
+            {
+                discovery += ( (parametersList.at((i*4)+3))/(parametersList.at((i*4)+1)) )*0.20 + ( (parametersList.at((i*4)+3))/(parametersList.at((i*4)+2)) )*0.80;
+            }
+        }else if (MainWindow::getIndexToSortCTable() == 1 )
+        {
+            for (int i=0; i<individualSize; i++)
+            {
+                discovery += ( (parametersList.at((i*4)+3))/(parametersList.at((i*4)+1)) )*0.60 + ( (parametersList.at((i*4)+3))/(parametersList.at((i*4)+2)) )*0.40;
+            }
         }
-*/
-        // ********************************************************************************************************
-
-        // ********************************************************************************************************
-        // codigo para probar funcion objetivo = ((Suma AP_i)/minchannel_i)*0.60 + ((Suma AP_i)/maxchannel_i)*0.40
-
-        for (int i=0; i<individualSize; i++)
+        else // getIndexToSortCTable() == 2
         {
-            discovery += ( (parametersList.at((i*4)+3))/(parametersList.at((i*4)+1)) )*0.60 + ( (parametersList.at((i*4)+3))/(parametersList.at((i*4)+2)) )*0.40;
+            for (int i=0; i<individualSize; i++)
+            {
+                discovery += ( (parametersList.at((i*4)+3))/(parametersList.at((i*4)+1)) )*0.60 + ( (parametersList.at((i*4)+3))/(parametersList.at((i*4)+2)) )*0.40;
+            }
         }
 
         // ********************************************************************************************************
@@ -1210,7 +1129,7 @@ void Individual::setNewNscansForMutation()
 
 void Individual::executeFullScanning()
 {
-    //Individual * scannedIndividual = new Individual(0);
+    //Individual * scannedIndividual = new Individual();
 
     //QString database("database.db");
     QString database("test_18.1.db");
@@ -1247,7 +1166,7 @@ void Individual::executeFullScanning()
 
 Individual * Individual::scanSequence()
 {
-    Individual * scannedIndividual = new Individual(0);
+    Individual * scannedIndividual = new Individual();
 
     //QString database("database.db");
     QString database("test_18.1.db");
@@ -1290,7 +1209,7 @@ void Individual::getAverageOnFullScanning(){
 
     for (int j=0; j<30; j++)
     {
-        tmpIndividual = new Individual(0);
+        tmpIndividual = new Individual();
 
         for (int j=0;j<getIndividualSize();j++){
             tmpIndividual->setParameter((j*4), getParameter((j*4)));

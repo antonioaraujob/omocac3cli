@@ -153,7 +153,28 @@ private:
     /**
      * @brief Indice para ordenar la tabla C del espacio de creencias para la mutacion dirigida
      */
-    int indexToSortCTable;
+    static int indexToSortCTable;
+
+    /**
+     * @brief Limite inferior del MinChannelTime
+     */
+    static double lowerMinChannelTime;
+
+    /**
+     * @brief Limite superior del MinChannelTime
+     */
+    static double upperMinChannelTime;
+
+    /**
+     * @brief Limite inferior del MaxChannelTime
+     */
+    static double lowerMaxChannelTime;
+
+    /**
+     * @brief Limite superior del MaxChannelTime
+     */
+    static double upperMaxChannelTime;
+
 
 public:
 
@@ -416,6 +437,7 @@ public:
      * @return verdadero si se debe realizar la ejecucion del algoritmo original
      */
     bool getDoOriginalAlgorithm();
+
     /**
      * @brief Retorna el tamano del individuo con respecto a la secuencia de canales
      * @return tamano del individuo con respecto a la secuencia de canales
@@ -454,6 +476,35 @@ public:
      */
     bool getUseSmartIndividual();
 
+    /**
+     * @brief Retorna el limite inferior del MinChannelTime
+     * @return limite inferior del MinChannelTime
+     */
+    static double getLowerMinChannelTime();
+
+    /**
+     * @brief Retorna el limite superior del MinChannelTime
+     * @return limite superio del MinChannelTime
+     */
+    static double getUpperMinChannelTime();
+
+    /**
+     * @brief Retorna el limite inferior del MaxChannelTime
+     * @return limite inferior del MaxChannelTime
+     */
+    static double getLowerMaxChannelTime();
+
+    /**
+     * @brief Retorna el limite superior del MaxChannelTime
+     * @return limite superio del MaxChannelTime
+     */
+    static double getUpperMaxChannelTime();
+
+    /**
+     * @brief Retorna el indice para ordenar la tabla C del espacio de creencias para la mutacion dirigida
+     * @return indice para ordenar la tabla C del espacio de creencias para la mutacion dirigida
+     */
+    static int getIndexToSortCTable();
 
 };
 

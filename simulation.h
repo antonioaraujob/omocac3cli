@@ -86,11 +86,6 @@ private:
     int stdDeviationMaxChannelTime;
 
     /**
-     * @brief Numero de APs desplegados en la simulacion
-     */
-    int deployedAPs;
-
-    /**
      * @brief Lista de la poblacion de individuos
      */
     QList<Individual *> populationList;
@@ -182,7 +177,6 @@ public:
      * @param stdDev desviacion estandar de la distribucion normal para la mutacion gausiana
      * @param stdDev desviacion estandar de la distribucion normal para la mutacion gausiana MinChannelTime
      * @param stdDev desviacion estandar de la distribucion normal para la mutacion gausiana MaxChannelTime
-     * @param aps numero de APs desplegados en el entorno
      * @param directedMutation Verdadero si se utilizara la mutacion dirigida
      * @param directedMutationProbability Probabilidad de ocurrencia de la mutacion dirigida
      * @param indSize tamano del individuo en la simulacion
@@ -191,7 +185,7 @@ public:
      *
      */
     Simulation(int population, int extFileSize, int generations, int subintervalsGrid, int genNormative,
-               int matches, int stdDev, int stdDevMin, int stdDevMax, int aps, bool dMutation, double dMutationProbability,
+               int matches, int stdDev, int stdDevMin, int stdDevMax, bool dMutation, double dMutationProbability,
                int indSize, int ctableWindow, int indToSortCTable);
 
     /**

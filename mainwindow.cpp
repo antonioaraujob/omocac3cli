@@ -61,6 +61,31 @@ bool MainWindow::emulateScanning = true;
  */
 ScanningCampaing * MainWindow::scanningCampaing = 0;
 
+/**
+ * @brief Define e inicializa el miembro estatico lowerMinChannelTime
+ */
+double MainWindow::lowerMinChannelTime = 0;
+
+/**
+ * @brief Define e inicializa el miembro estatico upperMinChannelTime
+ */
+double MainWindow::upperMinChannelTime = 0;
+
+/**
+ * @brief Define e inicializa el miembro estatico lowerMaxChannelTime
+ */
+double MainWindow::lowerMaxChannelTime = 0;
+
+/**
+ * @brief Define e inicializa el miembro estatico upperMaxChannelTime
+ */
+double MainWindow::upperMaxChannelTime = 0;
+
+/**
+ * @brief Define e inicializa el miembro estatico indexToSortCTable
+ */
+int MainWindow::indexToSortCTable = 0;
+
 
 MainWindow::MainWindow()
 {
@@ -121,6 +146,15 @@ MainWindow::MainWindow()
 
     indexToSortCTable = settings.value("indiceParaOrdenarTablaC").toInt();
 
+    lowerMinChannelTime = settings.value("limiteInferiorMinChannelTime").toDouble();
+
+    upperMinChannelTime = settings.value("limiteSuperiorMinChannelTime").toDouble();
+
+    lowerMaxChannelTime = settings.value("limiteInferiorMaxChannelTime").toDouble();
+
+    upperMaxChannelTime = settings.value("limiteSuperiorMaxChannelTime").toDouble();
+
+
     // base de datos sqlite
     QString database("test_18.1.db");
     //QString database("database.db");
@@ -132,9 +166,6 @@ MainWindow::MainWindow()
     scanningCampaing->prepareIRD();
 
     //getAPs(11, 10, 20);
-
-    qDebug("salida");
-
 
 }
 
@@ -165,24 +196,11 @@ void MainWindow::executeAlgorithm()
                                 standarDeviation,
                                 standarDeviationMinChannelTime,
                                 standarDeviationMaxChannelTime,
-                                25,
                                 doDirectedMutation,
                                 mutationProbability,
                                 individualSize,
                                 ctableWindow,
                                 indexToSortCTable);
-    /*
-                ui->lineEditPopulationSize->text().toInt(),
-                                ui->lineEditExternalFileSize->text().toInt(),
-                                ui->lineEditGenerationNumber->text().toInt(),
-                                ui->lineEditGridSubintervals->text().toInt(),
-                                ui->lineEditGnormative->text().toInt(),
-                                ui->lineEditPopulationSize->text().toInt()/2,
-                                ui->lineEditMutationStd->text().toInt(),
-                                25,
-                                ui->checkBoxDirectedMutation->isChecked(),
-                                ui->lineEditDirectedMutation->text().toDouble());
-                                */
 
     qsrand((uint)QTime::currentTime().msec());
 
@@ -1575,4 +1593,29 @@ int MainWindow::getAPs(int channel, int minChannelTime, int maxChannelTime)
 bool MainWindow::getUseSmartIndividual()
 {
     return useSmartIndividual;
+}
+
+double MainWindow::getLowerMinChannelTime()
+{
+    return lowerMinChannelTime;
+}
+
+double MainWindow::getUpperMinChannelTime()
+{
+    return upperMinChannelTime;
+}
+
+double MainWindow::getLowerMaxChannelTime()
+{
+    return lowerMaxChannelTime;
+}
+
+double MainWindow::getUpperMaxChannelTime()
+{
+    return upperMaxChannelTime;
+}
+
+int MainWindow::getIndexToSortCTable()
+{
+    return indexToSortCTable;
 }

@@ -63,7 +63,7 @@ NormativeGrid::NormativeGrid(int subIntervals, NormativePhenotypicPart * nPhenot
         for (int j = 0; j < subIntervalNumber; j++)
         {
             cell = new Cell();
-            //individual = new Individual(j);
+            //individual = new Individual();
             //individual->printIndividual();
             //cell->addIndividual(individual);
 

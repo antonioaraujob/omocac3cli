@@ -57,7 +57,7 @@ Mutation::~Mutation()
 }
 
 
-void Mutation::doMutation(QList<Individual *> population, double std, double stdMin, double stdMax, int deployedAp)
+void Mutation::doMutation(QList<Individual *> population, double std, double stdMin, double stdMax)
 {
     newPopulation.clear();
 
@@ -72,7 +72,7 @@ void Mutation::doMutation(QList<Individual *> population, double std, double std
     for (int i=0; i<population.count(); i++)
     {
         father = population.at(i);
-        offspring = new Individual(deployedAp);
+        offspring = new Individual();
         //qDebug("===== offspring id: %d", offspring->getIndividualId());
 
         // crear un individuo (offspring) y mutar todos sus parametros
@@ -128,7 +128,7 @@ void Mutation::doMutation(QList<Individual *> population, double std, double std
     for (int i=0; i<population.count(); i++)
     {
         father = population.at(i);
-        offspring = new Individual(deployedAp);
+        offspring = new Individual();
         //qDebug("===== offspring id: %d", offspring->getIndividualId());
 
         // antes de mutar
@@ -144,7 +144,7 @@ void Mutation::doMutation(QList<Individual *> population, double std, double std
         qSort(list.begin(), list.end(), individual1LessThanIndividual2);
         Individual * indivitualToReturn = list.at(list.size()-1);
 
-        Individual * newOffspring = new Individual(0);
+        Individual * newOffspring = new Individual();
         int channel=0;
         int min=0;
         int max=0;
@@ -202,7 +202,7 @@ void Mutation::doMutation(QList<Individual *> population, double std, double std
 */
 
 void Mutation::doDirectedMutation(QList<Individual *> population, double std, double stdMin, double stdMax,
-                                  int deployedAp, double dMutationProbability, NormativeGrid * grid)
+                                  double dMutationProbability, NormativeGrid * grid)
 {
     qDebug("Mutation::doDirectedMutation con probabilidad %f", dMutationProbability);
 
@@ -234,7 +234,7 @@ void Mutation::doDirectedMutation(QList<Individual *> population, double std, do
         {
             // hacer la mutacion gausiana con el papa como patron
             // escribir una funcion
-            originalMutation(father, std, stdMin, stdMax, deployedAp);
+            originalMutation(father, std, stdMin, stdMax);
         }
 
     }
@@ -243,7 +243,7 @@ void Mutation::doDirectedMutation(QList<Individual *> population, double std, do
 
 
 void Mutation::doDirectedMutation(QList<Individual *> population, double std, double stdMin, double stdMax,
-                                  int deployedAp, double dMutationProbability, CTable * ctable)
+                                  double dMutationProbability, CTable * ctable)
 {
     // ejecutar el proceso de mutacion de acuerdo al conocimiento de la tabla C del espacio de creencias
 
@@ -276,7 +276,7 @@ void Mutation::doDirectedMutation(QList<Individual *> population, double std, do
         else
         {
             // hacer la mutacion gausiana con el papa como patron
-            originalMutation(father, std, stdMin, stdMax, deployedAp);
+            originalMutation(father, std, stdMin, stdMax);
         }
 
     }
@@ -1050,7 +1050,7 @@ double Mutation::getNewParameterAPs(int channel, double minChannelTime, double m
 }
 
 
-void Mutation::originalMutation(Individual * father, double std, double stdMin, double stdMax, int deployedAp)
+void Mutation::originalMutation(Individual * father, double std, double stdMin, double stdMax)
 {
     qDebug("Mutation::originalMutation(Individual * father)");
 
@@ -1061,7 +1061,7 @@ void Mutation::originalMutation(Individual * father, double std, double stdMin, 
     //father = population.at(i);
 
     Individual * offspring;
-    offspring = new Individual(deployedAp);
+    offspring = new Individual();
     //qDebug("===== offspring id: %d", offspring->getIndividualId());
 
     double newParameterValue = 0;
@@ -1121,7 +1121,7 @@ void Mutation::directedMutation(NormativeGrid *grid, Individual *father, double 
     // no hay como ejercer influencia en la mutacion
     if (cellList.count() == 0)
     {
-        originalMutation(father, getStdDeviation(), stdMin, stdMax, /*deployedAp*/ 10);
+        originalMutation(father, getStdDeviation(), stdMin, stdMax);
         return;
     }
     else // existe al menos una celda con individuo en la rejilla
@@ -1133,7 +1133,7 @@ void Mutation::directedMutation(NormativeGrid *grid, Individual *father, double 
         if (selectedCell->getCount() == 1)
         {
             qDebug("   la celda tiene un solo individuo");
-            originalMutation(father, getStdDeviation(), stdMin, stdMax, /*deployedAp*/ 10);
+            originalMutation(father, getStdDeviation(), stdMin, stdMax);
             return;
         }
         else // la celda tiene dos o mas individuos
@@ -1160,7 +1160,7 @@ void Mutation::directedMutation(NormativeGrid *grid, Individual *father, double 
 
             int numberOfIndividuals = selectedCell->getCount();
 
-            Individual * preOffspring = new Individual(10);
+            Individual * preOffspring = new Individual();
 
             qDebug("-----preoffspring------");
             preOffspring->printIndividual();
@@ -1588,7 +1588,7 @@ double Mutation::getAPsFromMaxNumberApproach(int channel, double min, double max
 
 Individual * Mutation::scanSequence(Individual * ind)
 {
-    Individual * scannedIndividual = new Individual(0);
+    Individual * scannedIndividual = new Individual();
 
     //QString database("database.db");
     QString database("test_18.1.db");

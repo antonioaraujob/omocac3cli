@@ -45,7 +45,7 @@ int Simulation::individualIdCounter = 0;
 
 
 Simulation::Simulation(int population, int extFileSize, int generations, int subintervalsGrid, int genNormative,
-                       int matches, int stdDev, int stdDevMin, int stdDevMax, int aps, bool dMutation, double dMutationProbability,
+                       int matches, int stdDev, int stdDevMin, int stdDevMax, bool dMutation, double dMutationProbability,
                        int indSize, int ctableWindow, int indToSortCTable)
 {
     populationSize = population;
@@ -67,8 +67,6 @@ Simulation::Simulation(int population, int extFileSize, int generations, int sub
     stdDeviationMinChannelTime = stdDevMin;
 
     stdDeviationMaxChannelTime = stdDevMax;
-
-    deployedAPs = aps;
 
     directedMutation = dMutation;
 
@@ -96,7 +94,6 @@ Simulation::Simulation(int population, int extFileSize, int generations, int sub
     qDebug("    desviacion estandar: %d", stdDeviation);
     qDebug("    desviacion estandar min: %d", stdDeviationMinChannelTime);
     qDebug("    desviacion estandar max : %d", stdDeviationMaxChannelTime);
-    qDebug("    numero de APs desplegados: %d", deployedAPs);
     qDebug("    tamano de ventana de CTable: %d", ctableWindow);
 }
 
@@ -136,9 +133,9 @@ void Simulation::initializePopulation()
     // inicializacion de la poblacion
     for (int i = 0; i < populationSize; i++)
     {
-        individuo = new Individual(deployedAPs);
+        individuo = new Individual();
 
-        //individuo->printIndividual();
+        individuo->printIndividual();
         individuo->getAverageOnFullScanning();
 
         individuo->printIndividual();
@@ -663,13 +660,13 @@ void Simulation::mutatePopulation()
     if (directedMutation)
     {
         //mutation->doDirectedMutation(populationList, getStdDeviation(), stdDeviationMinChannelTime, stdDeviationMaxChannelTime,
-        //                             deployedAPs, directedMutationProbability, nGrid);
+        //                             directedMutationProbability, nGrid);
         mutation->doDirectedMutation(populationList, getStdDeviation(), stdDeviationMinChannelTime, stdDeviationMaxChannelTime,
-                                     deployedAPs, directedMutationProbability, ctable);
+                                     directedMutationProbability, ctable);
     }
     else
     {
-        mutation->doMutation(populationList, getStdDeviation(), stdDeviationMinChannelTime, stdDeviationMaxChannelTime, deployedAPs);
+        mutation->doMutation(populationList, getStdDeviation(), stdDeviationMinChannelTime, stdDeviationMaxChannelTime);
     }
 
     mutatedPopulationList = mutation->getNewPopulation();
