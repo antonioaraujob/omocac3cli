@@ -186,7 +186,7 @@ void Simulation::initializeSmartPopulation()
 */
 
     // inicializacion de la poblacion
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 9; i++)
     {
         individuo = new Individual();
 
@@ -208,6 +208,7 @@ void Simulation::initializeSmartPopulation()
         individuo = new Individual(true, "6,15,13,1,15,13,11,15,15,9,15,15,10,15,10,3,11,11,8,7,3,7,7,7,5,6,4,4,6,3,2,3,3");
         populationList.append(individuo);
     }
+    individuo->getAverageOnFullScanning();
 
     qDebug("tamano de la poblacion: %d",populationList.count());
 }
@@ -539,6 +540,17 @@ void Simulation::updateGrid(QList<Individual *> nonDominated)
 */
     qDebug("Simulation::updateGrid");
     Individual * auxIndividual;
+
+    qDebug("cantidad de individuos no dominados recien agregados al archivo externo");
+    qDebug(qPrintable(QString::number(nonDominated.count())));
+
+    // verificar si existen individuos recientemente agregados
+    if (nonDominated.count() == 0)
+    {
+        qDebug("    nonDominated.count() == 0");
+        return;
+    }
+
     for (int i=0; i<nonDominated.count(); i++)
     {
         auxIndividual = nonDominated.at(i);
@@ -571,6 +583,15 @@ void Simulation::updateCTable(QList<Individual *> newNonDominatedIndividualsFrom
 {
     // aqui se debe actualizar el superindividuo de CTable tomando los nuevos individuos agregados
     // al archivo externo; similar a la actualizacion de la grid
+
+
+    //verificar si existen individuos recientemente agregados
+    if (newNonDominatedIndividualsFromEF.count() == 0)
+    {
+        qDebug("Simulation::updateCTable: no hay individuos recientemente agregados");
+        return;
+    }
+
 
     // aqui se debe obtener el super individuo inicial
     QList<CTableGen *> superIndividualGenList;
