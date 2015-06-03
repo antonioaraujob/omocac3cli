@@ -24,7 +24,7 @@ public:
     /**
      * @brief Constructor de la clase GridSubInterval
      */
-    GridSubInterval(int l, int u);
+    GridSubInterval(double l, double u);
 
     /**
      * @brief Destructor de la clase GridSubInterval

@@ -207,14 +207,14 @@ void Simulation::initializeNormativePhenotypicPart()
     qSort(initialNonDominatedPopulation.begin(), initialNonDominatedPopulation.end(), xLessThanF1);
 
     // tomar los limites inferior y superior
-    int lF1 = initialNonDominatedPopulation.at(0)->getPerformanceDiscovery();
-    int uF1 = initialNonDominatedPopulation.at(initialNonDominatedPopulation.count()-1)->getPerformanceDiscovery();
+    double lF1 = initialNonDominatedPopulation.at(0)->getPerformanceDiscovery();
+    double uF1 = initialNonDominatedPopulation.at(initialNonDominatedPopulation.count()-1)->getPerformanceDiscovery();
 
     // ordenar los no dominados con respecto a la funcion objetivo 2 de menor a mayor
     qSort(initialNonDominatedPopulation.begin(), initialNonDominatedPopulation.end(), xLessThanF2);
 
-    int lF2 = initialNonDominatedPopulation.at(0)->getPerformanceLatency();
-    int uF2 = initialNonDominatedPopulation.at(initialNonDominatedPopulation.count()-1)->getPerformanceLatency();
+    double lF2 = initialNonDominatedPopulation.at(0)->getPerformanceLatency();
+    double uF2 = initialNonDominatedPopulation.at(initialNonDominatedPopulation.count()-1)->getPerformanceLatency();
 
     // asigna los extremos de las funciones objetivo con respecto a los individuos no dominados
     normativePhenotipicPart->updateNormativePhenotypicPart(lF1, uF1, lF2, uF2);
@@ -324,9 +324,7 @@ void Simulation::initializeCTable()
     QList<CTableGen *> individualConverted;
     QList< QList<CTableGen *> > populationConvertedList;
 
-
     Individual * individual;
-
 
     for (int i=0; i<populationList.size(); i++)
     {
@@ -334,7 +332,6 @@ void Simulation::initializeCTable()
         individual = populationList.at(i);
         // calcular el promedio de APi
         individual->getAverageOnFullScanning();
-
 
         // convertir el individuo a lista de genes
         individualConverted = ctable->convertIndividualToCTableGen(individual);
@@ -347,18 +344,8 @@ void Simulation::initializeCTable()
             individualConverted.at(j)->calculateIndexB();
             individualConverted.at(j)->calculateIndexC();
         }
-
         populationConvertedList.append(individualConverted);
-
     }
-
-    int n = populationConvertedList.size();
-    QList<CTableGen *> test = populationConvertedList.at(0);
-    int t = test.size();
-    QList<CTableGen *> test2 = populationConvertedList.at(1);
-    int t2 = test.size();
-    qDebug("espera");
-
 
     CTableGen * maxGen;
     CTableGen * auxGen;
@@ -427,14 +414,14 @@ void Simulation::updateNormativePhenotypicPart()
     qSort(extFileAndOutOfGridIndividualList.begin(), extFileAndOutOfGridIndividualList.end(), xLessThanF1);
 
     // tomar los limites inferior y superior
-    int lF1 = extFileAndOutOfGridIndividualList.at(0)->getPerformanceDiscovery();
-    int uF1 = extFileAndOutOfGridIndividualList.at(extFileAndOutOfGridIndividualList.count()-1)->getPerformanceDiscovery();
+    double lF1 = extFileAndOutOfGridIndividualList.at(0)->getPerformanceDiscovery();
+    double uF1 = extFileAndOutOfGridIndividualList.at(extFileAndOutOfGridIndividualList.count()-1)->getPerformanceDiscovery();
 
     // ordenarlos los no dominados con respecto a la funcion objetivo 2 de menor a mayor
     qSort(extFileAndOutOfGridIndividualList.begin(), extFileAndOutOfGridIndividualList.end(), xLessThanF2);
 
-    int lF2 = extFileAndOutOfGridIndividualList.at(0)->getPerformanceLatency();
-    int uF2 = extFileAndOutOfGridIndividualList.at(extFileAndOutOfGridIndividualList.count()-1)->getPerformanceLatency();
+    double lF2 = extFileAndOutOfGridIndividualList.at(0)->getPerformanceLatency();
+    double uF2 = extFileAndOutOfGridIndividualList.at(extFileAndOutOfGridIndividualList.count()-1)->getPerformanceLatency();
 
     // asigna los extremos de las funciones objetivo con respecto a los individuos no dominados
     normativePhenotipicPart->updateNormativePhenotypicPart(lF1, uF1, lF2, uF2);
@@ -533,17 +520,26 @@ void Simulation::updateGrid(QList<Individual *> nonDominated)
     {
         auxIndividual = nonDominated.at(i);
 
+        if(nGrid->individualInsideGrid(auxIndividual))
+        {
+            nGrid->addIndividualToGrid(auxIndividual);
+        }
+
+        /*
+        // comentado porque si el individuo no pertenece a la grid no se hace nada
         if(!nGrid->individualInsideGrid(auxIndividual))
         {
             // TODO: revisar esto:
             qDebug("%%%%%%%% el individuo no pertenece a la grid");
             //auxIndividual->printIndividual();
             //outOfGridIndividualList.append(auxIndividual);
+            Q_ASSERT_X(false, "Simulation::updateGrid()", "el individuo que se desea agregar no pertenece a la grid");
         }
         else
         {
             nGrid->addIndividualToGrid(auxIndividual);
         }
+        */
     }
 }
 
@@ -553,17 +549,13 @@ void Simulation::updateCTable(QList<Individual *> newNonDominatedIndividualsFrom
     // aqui se debe actualizar el superindividuo de CTable tomando los nuevos individuos agregados
     // al archivo externo; similar a la actualizacion de la grid
 
-
-
     // aqui se debe obtener el super individuo inicial
     QList<CTableGen *> superIndividualGenList;
 
     QList<CTableGen *> individualConverted;
     QList< QList<CTableGen *> > populationConvertedList;
 
-
     Individual * individual;
-
 
     for (int i=0; i<newNonDominatedIndividualsFromEF.size(); i++)
     {
@@ -571,7 +563,6 @@ void Simulation::updateCTable(QList<Individual *> newNonDominatedIndividualsFrom
         individual = newNonDominatedIndividualsFromEF.at(i);
         // calcular el promedio de APi
         individual->getAverageOnFullScanning();
-
 
         // convertir el individuo a lista de genes
         individualConverted = ctable->convertIndividualToCTableGen(individual);
@@ -588,14 +579,6 @@ void Simulation::updateCTable(QList<Individual *> newNonDominatedIndividualsFrom
         populationConvertedList.append(individualConverted);
 
     }
-/*
-    int n = populationConvertedList.size();
-    QList<CTableGen *> test = populationConvertedList.at(0);
-    int t = test.size();
-    QList<CTableGen *> test2 = populationConvertedList.at(1);
-    int t2 = test.size();
-    qDebug("espera");
-*/
 
     CTableGen * maxGen;
     CTableGen * auxGen;
@@ -643,9 +626,6 @@ void Simulation::updateCTable(QList<Individual *> newNonDominatedIndividualsFrom
         // el ordenamiento de CTable se hace internamente en la funcion
         ctable->addSuperIndividual(superIndividualGenList, indexToSortCTable);
     }
-
-
-
 }
 
 
@@ -978,10 +958,7 @@ void Simulation::evaluateIndividuals()
         individual = populationList.at(i);
         individual->calculateDiscoveryValue();
         individual->calculateLatencyValue();
-
     }
-
-
 }
 
 void Simulation::printList(QList<Individual*> list)

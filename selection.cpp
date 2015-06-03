@@ -92,10 +92,10 @@ void Selection::doSelection(QList<Individual *> population2p, int matches, Norma
             adversaryList.append(adversary);
         }
         // ejecutar los torneos del individuo contra los adversarios
-        //makeTournaments(i, selectedIndividual, adversaryList, nGrid);
+        makeTournaments(i, selectedIndividual, adversaryList, nGrid);
 
         // ejecutar los torneos del invidivuo contra los adversarios y las reglas nuevas
-        makeTournamentsWithNewRules(i, selectedIndividual, adversaryList, nGrid);
+        //makeTournamentsWithNewRules(i, selectedIndividual, adversaryList, nGrid);
 
 
         // incrementar el valor de i
@@ -110,11 +110,6 @@ void Selection::doSelection(QList<Individual *> population2p, int matches, Norma
 
     // agregar los P individuos con mayores valores de victorias a la lista de la poblacion
     // seleccionada selectedPopulation
-    //
-
-    // evaluar cada individuo de la poblacion seleccionada o hacer fuera en la clase Simulation
-    // TODO
-
     int halfPopulation = population2p.count()/2;
     for (int k=population2p.count()-1; k > (halfPopulation)-1; k--)
     {
@@ -123,6 +118,16 @@ void Selection::doSelection(QList<Individual *> population2p, int matches, Norma
     }
 
     qDebug("TAMANO DE LA POBLACION SELECCIONADA DESPUES DE LOS TORNEOS: %d", selectedPopulation.count());
+    qDebug("Tamano de la lista de individuos que cayeron fuera de la rejilla: %d", outOfGridList.count());
+
+
+    // reinicializar los contadores de los encuentros ganados de individuos a cero
+    for (int i=0; i<selectedPopulation.size(); i++)
+    {
+        selectedIndividual = selectedPopulation.at(i);
+        selectedIndividual->setWonMatchesCounter(0);
+    }
+
 
 /*
     // contenedor auxiliar para realizar la seleccion de los P individuos con mas victorias
@@ -167,10 +172,6 @@ void Selection::doSelection(QList<Individual *> population2p, int matches, Norma
     }
 
 */
-    // evaluar cada individuo de la poblacion seleccionada o hacer fuera en la clase Simulation
-    // TODO
-
-    qDebug("Tamano de la lista de individuos que cayeron fuera de la rejilla: %d", outOfGridList.count());
 }
 
 void Selection::makeTournaments(int individualIndex, Individual * individual, QList<Individual *> adversaryList, NormativeGrid * nGrid)
@@ -202,7 +203,7 @@ void Selection::makeTournaments(int individualIndex, Individual * individual, QL
         }
         else
         {
-            // 2) si no son comparables (esto quiere decir que a no domina a b, ni que b domina a a)
+            // 2) si no son comparables (esto quiere decir que individual no domina a adversary, ni que adversary domina a individual)
             // o sus valores de funciones objetivo son iguales
             if ( (nonComparableIndividuals(individual, adversary)) ||
                 ( (individual->getPerformanceDiscovery() == adversary->getPerformanceDiscovery()) &&
@@ -222,17 +223,25 @@ void Selection::makeTournaments(int individualIndex, Individual * individual, QL
                     gridCounterIndividual = nGrid->getCountOfCell(individual);
                     gridCounterAdversary = nGrid->getCountOfCell(adversary);
 
-                    if (gridCounterIndividual <= gridCounterAdversary)
+                    if (gridCounterIndividual == gridCounterAdversary)
                     {
-                        // individual gana porque se encuentra en una celda menos poblada
                         individual->incrementWonMatchesCounter();
-                        qDebug("   gana el individuo contendor");
+                        adversary->incrementWonMatchesCounter();
                     }
                     else
                     {
-                        // adversary gana porque se encuentra en una celda menos poblada
-                        adversary->incrementWonMatchesCounter();
-                        qDebug("   gana el individuo adversario");
+                        if (gridCounterIndividual < gridCounterAdversary)
+                        {
+                            // individual gana porque se encuentra en una celda menos poblada
+                            individual->incrementWonMatchesCounter();
+                            qDebug("   gana el individuo contendor");
+                        }
+                        else
+                        {
+                            // adversary gana porque se encuentra en una celda menos poblada
+                            adversary->incrementWonMatchesCounter();
+                            qDebug("   gana el individuo adversario");
+                        }
                     }
                 }
                 else
@@ -250,8 +259,8 @@ void Selection::makeTournaments(int individualIndex, Individual * individual, QL
                         addIndividualToOutOfGridIndividualList(individual);
                         qDebug("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
                     }
-                    else
-                    {
+                    //else
+                    //{
                         if ( !nGrid->individualInsideGrid(adversary) )
                         {
                             qDebug("vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv");
@@ -263,7 +272,7 @@ void Selection::makeTournaments(int individualIndex, Individual * individual, QL
                             addIndividualToOutOfGridIndividualList(adversary);
                             qDebug("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
                         }
-                    }
+                    //}
                 }
             }
         }

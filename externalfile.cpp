@@ -444,7 +444,7 @@ bool ExternalFile::newIndividualNotDominatedNotDominates(Individual * newIndivid
     }
 }
 
-
+/*
 void ExternalFile::checkGridCellAndInsertIndividual(Individual * newIndividual, NormativeGrid * nGrid)
 {
     // 4) el tamano del archivo es mayor que q entonces se busca algun individuo
@@ -474,7 +474,44 @@ void ExternalFile::checkGridCellAndInsertIndividual(Individual * newIndividual, 
         }
     }
 }
+*/
 
+void ExternalFile::checkGridCellAndInsertIndividual(Individual * newIndividual, NormativeGrid * nGrid)
+{
+    // 4) el tamano del archivo es mayor que q entonces se busca algun individuo
+    // del archivo externo cuya celda contenga mas individuos que la celda a la
+    // que pertenece el individuo que se pretende agregar, y se reemplaza el
+    // individuo anterior con el nuevo.
+
+    int newIndividualCellCount = 0;
+
+    if (nGrid->individualInsideGrid(newIndividual))
+    {
+        newIndividualCellCount = nGrid->getCountOfCell(newIndividual);
+    }
+
+    //newIndividualCellCount = nGrid->getCountOfCell(newIndividual);
+
+    Individual * externalFileindividual;
+
+    int externalFileindividualCellCount = 0;
+
+
+    for (int i = 0; i < externalFileNonDominatedList.count(); i++)
+    {
+        externalFileindividual = externalFileNonDominatedList.at(i);
+        externalFileindividualCellCount = nGrid->getCountOfCell(externalFileindividual);
+
+        if (externalFileindividualCellCount > newIndividualCellCount)
+        {
+            // reemplazar el individuo con newIndivual
+            externalFileNonDominatedList.replace(i, newIndividual);
+
+            // agregar el individuo nuevo en la lista de individuos de la generacion
+            currentGenerationIndividualList.append(newIndividual);
+        }
+    }
+}
 
 bool ExternalFile::isIndividualInExternalFile(Individual * individual)
 {

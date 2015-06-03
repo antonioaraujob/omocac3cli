@@ -251,8 +251,11 @@ void MainWindow::executeAlgorithm()
     simulation->initializeGrid();
     qDebug("...se acaba de inicializar la grid");
 
-    // inicializar la tabla C del espacio de creencias
-    simulation->initializeCTable();
+    // inicializar la tabla C del espacio de creencias si se va a usar mutacion dirigida
+    if (doDirectedMutation)
+    {
+        simulation->initializeCTable();
+    }
 
     // lista de individuos no dominados
     QList<Individual *> nonDominatedList;
@@ -293,7 +296,7 @@ void MainWindow::executeAlgorithm()
         // imprimir poblacion para depuracion
         simulation->printPopulation();
 
-        // obtener los individuos no dominados
+        // obtener los individuos no dominados nueva poblacion P
         nonDominatedList = simulation->getNonDominatedPopulationApproach1();
         qDebug("...Numero de individuos en la poblacion no dominada: %d", nonDominatedList.count());
 
@@ -311,6 +314,10 @@ void MainWindow::executeAlgorithm()
                simulation->getExternalFile()->getExternalFileList().count());
 
 
+        // actualizar la rejilla con todos los individuos no dominados recien agregados al archivo externo
+        // durante la generación actual
+        simulation->updateGrid(simulation->getExternalFile()->getCurrentGenerationIndividualList());
+
         // actualizar el espacio de creencias con los individos aceptados
         if (countOfGenerations == simulation->getgNormative())
         {
@@ -318,14 +325,12 @@ void MainWindow::executeAlgorithm()
             simulation->updateNormativePhenotypicPart();
         }
 
-
-        // actualizar la rejilla con todos los individuos no dominados recien agregados al archivo externo
-        // durante la generación actual
-        simulation->updateGrid(simulation->getExternalFile()->getCurrentGenerationIndividualList());
-
         // actualizar la tabla C del espacio de creencias todos los individuos no dominados recien agregados al archivo externo
-        // durante la generación actual
-        simulation->updateCTable(simulation->getExternalFile()->getCurrentGenerationIndividualList());
+        // durante la generación actual si se va a utilizar la mutacion dirigida
+        if (doDirectedMutation)
+        {
+            simulation->updateCTable(simulation->getExternalFile()->getCurrentGenerationIndividualList());
+        }
 
         simulation->getExternalFile()->resetCurrentGenerationIndividualList();
         qDebug("...despues de actualizar la rejilla");

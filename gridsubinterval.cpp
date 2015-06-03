@@ -1,6 +1,6 @@
 #include "gridsubinterval.h"
 
-GridSubInterval::GridSubInterval(int l, int u)
+GridSubInterval::GridSubInterval(double l, double u)
 {
     lowerBound = l;
     upperBound = u;

@@ -475,7 +475,8 @@ double Mutation::mutateIndividualParameter(int index, int mean, double std, doub
             intYi = 15;
             //qDebug("   el minChannelTime mutado esta por encima del limite (index %d)", index);
         }
-        Q_ASSERT_X( ((5<=intYi) && (intYi<=15)), "mutateIndividualParameter()", qPrintable(QString::number(intYi)));
+        Q_ASSERT_X( ((MainWindow::getLowerMinChannelTime()<=intYi) && (intYi<=MainWindow::getUpperMinChannelTime())),
+                    "mutateIndividualParameter()", qPrintable(QString::number(intYi)));
         //qDebug(qPrintable("   minChannelTime despues de mutado: "+QString::number(intYi)));
     }
     //else if (isThisParameterAMaxChannelTime(index))
@@ -494,7 +495,8 @@ double Mutation::mutateIndividualParameter(int index, int mean, double std, doub
             intYi = 90;
             //qDebug("   el maxChannelTime mutado esta por encima del limite (index %d)", index);
         }
-        Q_ASSERT_X( ((10<=intYi) && (intYi<=90)), "mutateIndividualParameter()", qPrintable(QString::number(intYi)));
+        Q_ASSERT_X( ((MainWindow::getLowerMaxChannelTime()<=intYi) && (intYi<=MainWindow::getUpperMaxChannelTime())),
+                    "mutateIndividualParameter()", qPrintable(QString::number(intYi)));
         //qDebug(qPrintable("   maxChannelTime despues de mutado: "+QString::number(intYi)));
     }
     //else if (isThisParameterAPs(index))
@@ -511,6 +513,8 @@ double Mutation::mutateIndividualParameter(int index, int mean, double std, doub
                                    offspring->getParameter(index-2),
                                    offspring->getParameter(index-1),
                                    offspring->getNscanForMutation());
+
+        Q_ASSERT_X( (intYi>= 0), "mutateIndividualParameter()", qPrintable(QString::number(intYi)) );
 
         if (intYi < 0)
         {
@@ -1071,7 +1075,6 @@ void Mutation::originalMutation(Individual * father, double std, double stdMin, 
         newParameterValue = mutateIndividualParameter(i, 0 /*father->getParameter(i)*/,std, stdMin, stdMax,
                                                       father->getParameter(i), offspring);
         offspring->setParameter(i, newParameterValue);
-
     }
 
     offspring->getAverageOnFullScanning();
@@ -1385,6 +1388,9 @@ void Mutation::directedMutation(CTable * ct, Individual * father)
         offspring->setParameter(((i*4)+2), convertedIndividual.at(i)->getMaxChannelTime());
         offspring->setParameter(((i*4)+3), convertedIndividual.at(i)->getAPs());
     }
+
+    offspring->getAverageOnFullScanning();
+
     offspring->calculateDiscoveryValue();
     offspring->calculateLatencyValue();
 

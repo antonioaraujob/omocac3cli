@@ -112,7 +112,15 @@ void NormativeGrid::addIndividualToGrid(Individual * ind)
 
     // encontrar el subintervalo de F1 y de F2
     int indexF1 = getF1SubintervalIndex(f1);
+    Q_ASSERT_X( ((0 <= indexF1) && (indexF1 < subIntervalListF1.count())),
+                "NormativeGrid::addIndividualToGrid",
+               "Se obtuvo un indice de subintervalo fuera de rango");
+
+
     int indexF2 = getF2SubintervalIndex(f2);
+    Q_ASSERT_X( ((0 <= indexF2) && (indexF2 < subIntervalListF2.count())),
+                "NormativeGrid::getCountOfCell",
+               "Se obtuvo un indice de subintervalo fuera de rango");
 
     if (indexF1 == -1)
     {
@@ -222,8 +230,13 @@ int NormativeGrid::getF1SubintervalIndex(double value)
             }
         }
     }
+    Q_ASSERT_X( ((0 <= index) && (index < subIntervalListF1.count())),
+                "NormativeGrid::getF1SubintervalIndex",
+               "Se obtuvo un indice de subintervalo fuera de rango");
+
     if (index == -1)
         qDebug("XXXXXXX getF1SubintervalIndex(double %f): %d", value, index);
+
     return index;
 }
 
@@ -247,6 +260,11 @@ int NormativeGrid::getF2SubintervalIndex(double value)
             }
         }
     }
+
+    Q_ASSERT_X( ((0 <= index) && (index < subIntervalListF2.count())),
+                "NormativeGrid::getF2SubintervalIndex",
+               "Se obtuvo un indice de subintervalo fuera de rango");
+
     if (index == -1)
         qDebug("XXXXXXX getF2SubintervalIndex(double %f): %d", value, index);
     return index;
@@ -290,8 +308,19 @@ int NormativeGrid::getCountOfCell(Individual * individual)
 
     // encontrar el subintervalo de F1 y de F2
     int indexF1 = getF1SubintervalIndex(f1);
-    int indexF2 = getF2SubintervalIndex(f2);
+    Q_ASSERT_X( ((0 <= indexF1) && (indexF1 < subIntervalListF1.count())),
+                "NormativeGrid::getCountOfCell",
+               "Se obtuvo un indice de subintervalo fuera de rango");
 
+
+    int indexF2 = getF2SubintervalIndex(f2);
+    Q_ASSERT_X( ((0 <= indexF2) && (indexF2 < subIntervalListF2.count())),
+                "NormativeGrid::getCountOfCell",
+               "Se obtuvo un indice de subintervalo fuera de rango");
+
+    return getCount(indexF1, indexF2);
+
+    /*
     if ( (indexF1 == -1) || (indexF2 == -1) )
     {
         return 0;
@@ -300,7 +329,7 @@ int NormativeGrid::getCountOfCell(Individual * individual)
     {
         return getCount(indexF1, indexF2);
     }
-
+    */
 }
 
 QList<Cell*> NormativeGrid::getPopulatedCellList()
