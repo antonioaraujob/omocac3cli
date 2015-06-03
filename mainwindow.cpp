@@ -231,14 +231,14 @@ void MainWindow::executeAlgorithm()
     */
 
     // inicializar poblacion de tamano P
-    //if (useSmartIndividual)
-    //{
-    //    simulation->initializeSmartPopulation();
-    //}
-    //else
-    //{
+    if (useSmartIndividual)
+    {
+        simulation->initializeSmartPopulation();
+    }
+    else
+    {
         simulation->initializePopulation();
-    //}
+    }
 
     // evaluar poblacion inicial
     simulation->evaluateIndividuals();

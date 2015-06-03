@@ -346,7 +346,7 @@ Individual::Individual(bool smart, QString sequence)
     emulateScanning = MainWindow::getEmulateScanning();
 
     // asignar un valor de nscan entre 1 y 8
-    nscansForMutation = qrand() % ((8 + 1) - 1) + 1;
+    nscansForMutation = 1; //qrand() % ((8 + 1) - 1) + 1;
 
     // inicializar el contador de torneos ganados en 0
     wonMatchesCounter = 0;

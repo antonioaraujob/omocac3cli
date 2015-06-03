@@ -149,11 +149,11 @@ void Simulation::initializePopulation()
     //return populationList;
 }
 
-/*
+
 void Simulation::initializeSmartPopulation()
 {
     Individual * individuo;
-
+/*
     // inicializacion de la mita de la poblacion con condiciones inciales
     for (int i = 0; i < populationSize/2; i++)
     {
@@ -183,12 +183,35 @@ void Simulation::initializeSmartPopulation()
         individuo = new Individual(true, "1,19,0,2,19,0,3,19,0,4,19,0,5,19,0,6,19,0,7,19,0,8,19,0,9,19,0,10,19,0,11,19,0");
         populationList.append(individuo);
     }
+*/
+
+    // inicializacion de la poblacion
+    for (int i = 0; i < 5; i++)
+    {
+        individuo = new Individual();
+
+        individuo->printIndividual();
+        individuo->getAverageOnFullScanning();
+
+        individuo->printIndividual();
+        individuo->getIndividualAsQString();
+        qDebug("individualId: %d", individuo->getIndividualId());
+        populationList.append(individuo);
+
+        //out << individuo->getIndividualAsQString() << endl;
+    }
 
 
+    // agregar 10 individuos de acuerdo a PIMRC
+    for (int j = 0; j < 1; j++)
+    {
+        individuo = new Individual(true, "6,15,13,1,15,13,11,15,15,9,15,15,10,15,10,3,11,11,8,7,3,7,7,7,5,6,4,4,6,3,2,3,3");
+        populationList.append(individuo);
+    }
 
     qDebug("tamano de la poblacion: %d",populationList.count());
 }
-*/
+
 
 QList<Individual *>  Simulation::getPopulationList()
 {
