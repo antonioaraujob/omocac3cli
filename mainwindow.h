@@ -536,6 +536,22 @@ public:
      *
      */
     void processLine(QString line);
+
+    /**
+     * @brief Calcula la varianza de la muestra
+     * @param sampleList lista de muestras
+     * @param mean media de las muestras
+     * @return varianza de la muestra
+     */
+    double computeSampleVariance(QList<double> sampleList, double mean);
+
+    /**
+     * @brief Calculo el valor que se suma y resta al promedio para construir el intervalo de confianza
+     * @param sampleList lista de muestras
+     * @param mean media de las muestras
+     * @return valor que se suma y resta al promedio para construir el intervalo de confianza
+     */
+    double computeConfidenceInterval(QList<double> sampleList, double mean);
 };
 
 #endif // MAINWINDOW_H

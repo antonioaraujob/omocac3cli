@@ -1637,7 +1637,8 @@ void MainWindow::generateAPResultsOfOriginalMutation()
 
     // abrir el archivo individuosFrenteParetoOriginalPorAPsDescendente
     //QFile file(resultsDirectory+"/individuosFrenteParetoOriginalPorAPsDescendente.txt");
-    QFile file("/home/antonio/Copy/2015/pgcomp/tesis/algoCultural/automatizarResultados/resultados/03.06.2015_13.19.01/individuosFrenteParetoOriginalPorAPsDescendente.txt");
+    //QFile file("/home/antonio/Copy/2015/pgcomp/tesis/algoCultural/automatizarResultados/resultados/03.06.2015_13.19.01/individuosFrenteParetoOriginalPorAPsDescendente.txt");
+    QFile file("/home/aaraujo/desarrollo/iaa/omocac3cli/resultados/03.06.2015_13.19.01/individuosFrenteParetoOriginalPorAPsDescendente.txt");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         Q_ASSERT_X(false, "MainWindow::generateAPResultsOfOriginalMutation()",
@@ -1740,7 +1741,14 @@ void MainWindow::processLine(QString line)
     double apsAvg = sum/30;
     qDebug("\npromedio de APs en 30 ejecuciones: %f \n", apsAvg);
 
+    double variance = computeSampleVariance(apList, apsAvg);
+    qDebug("varianza de APs en 30 ejecuciones: %f \n", variance);
 
+    double minConfidenceInterval = apsAvg - computeConfidenceInterval(apList, apsAvg);
+
+    double maxConfidenceInterval = apsAvg + computeConfidenceInterval(apList, apsAvg);
+
+    qDebug("intervalo de confianza 95 para promedio de APs: %f - %f - %f ", minConfidenceInterval, apsAvg, maxConfidenceInterval);
 
 
 }
@@ -1751,6 +1759,36 @@ void MainWindow::generateAPResultsOfDirectedMutation()
     // resultsDirectory cadena que tiene la ruta absoluta al directorio de resultados
 
 
+}
+
+
+
+double MainWindow::computeSampleVariance(QList<double> sampleList, double mean)
+{
+    double sampleVar;
+
+    // interesante lectura
+    // https://statistics.laerd.com/statistical-guides/measures-of-spread-standard-deviation.php
+
+    // Loop to compute sample variance
+    sampleVar = 0.0;
+    for (int i=0; i<sampleList.size(); i++)
+    {
+        sampleVar = sampleVar + (pow((sampleList.at(i) - mean), 2.0) / (sampleList.size() - 1));
+    }
+
+      return sampleVar;
+}
+
+double MainWindow::computeConfidenceInterval(QList<double> sampleList, double mean)
+{
+    double sampleVariance = computeSampleVariance(sampleList, mean);
+
+    // valor de la t de student para n-1 (29) grados de libertad para intervalo de 95%
+    double tStudentScore = 1.6991;
+
+    double confidenceInterval = tStudentScore * sqrt(sampleVariance/sampleList.size());
+    return confidenceInterval;
 }
 
 
