@@ -175,6 +175,10 @@ private:
      */
     static double upperMaxChannelTime;
 
+    /**
+     * @brief Cadena que especifica el directorio de resultados de la ejecucion del algoritmo
+     */
+    QString resultsDirectory;
 
 public:
 
@@ -506,6 +510,32 @@ public:
      */
     static int getIndexToSortCTable();
 
+    /**
+     * @brief Procesa los resultados de la ejecucion con el operador de mutacion original
+     * El procesamiento incluye ejecutar 30 full scanning en el emulador por cada cadena del
+     * algoritmo cultural. Con estos valores se construye un intervalo de confianza para
+     * el numero de APs descubiertos que luego se comparan con las cadenas de los dispositivos
+     * de referencia.
+     */
+    void generateAPResultsOfOriginalMutation();
+
+
+    /**
+     * @brief Procesa los resultados de la ejecucion con el operador de mutacion dirigida
+     * El procesamiento incluye ejecutar 30 full scanning en el emulador por cada cadena del
+     * algoritmo cultural. Con estos valores se construye un intervalo de confianza para
+     * el numero de APs descubiertos que luego se comparan con las cadenas de los dispositivos
+     * de referencia.
+     */
+    void generateAPResultsOfDirectedMutation();
+
+    /**
+     * @brief Procesa una cadena resultante del algoritmo cultural.
+     *
+     * Solo deja los valores de ch,min,max para todos los canales.
+     *
+     */
+    void processLine(QString line);
 };
 
 #endif // MAINWINDOW_H

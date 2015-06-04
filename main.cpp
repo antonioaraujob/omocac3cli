@@ -23,14 +23,22 @@ int main(int argc, char *argv[])
     }
     else if (mw.getDoOriginalAlgorithm())
     {
+        mw.generateAPResultsOfOriginalMutation();
+        return 0;
+
+
         // se ejecuta el algoritmo cultural una vez de acuerdo a los parametros
         // establecidos en el archivo de configuracion
         // mw.executeAlgorithm();
         mw.executeAlgorithmRepeated();
+
+        mw.generateAPResultsOfOriginalMutation();
     }
     else // ejecutarMutacionDirigida
     {
         mw.executeModificatedAlgorithm();
+
+        mw.generateAPResultsOfDirectedMutation();
     }
 
     qDebug("return 0");

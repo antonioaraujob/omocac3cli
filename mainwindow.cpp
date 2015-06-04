@@ -154,6 +154,7 @@ MainWindow::MainWindow()
 
     upperMaxChannelTime = settings.value("limiteSuperiorMaxChannelTime").toDouble();
 
+    resultsDirectory = "";
 
     // base de datos sqlite
     QString database("test_18.1.db");
@@ -467,7 +468,8 @@ void MainWindow::executeAlgorithmRepeated()
     qDebug("STD de Fo2 original: %s", qPrintable(QString::number(getStandardDeviation(meanF2Original, 2, repeatedOriginalSolutionList, 1))));
 
     // cadena con el nombre del subdirectorio que almacenara los resultados
-    QString resultsDirectory = createResultsDirectory();
+    //QString resultsDirectory = createResultsDirectory();
+    resultsDirectory = createResultsDirectory();
 
     QFile file(resultsDirectory+"/resultadosFinalesEjecucionRepetida.txt");
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text /*| QIODevice::Append*/))
@@ -531,6 +533,7 @@ void MainWindow::executeAlgorithmRepeated()
     // forma descendente
     reportIndividualOrderedByApInGenes(myList, resultsDirectory, "individuosFrenteParetoOriginalPorAPsDescendente", false);
 
+    // limpiar lista de resultados
     myList.clear();
 
 }
@@ -582,7 +585,8 @@ void MainWindow::executeModificatedAlgorithm()
     qDebug("STD de Fo2 modificada: %s", qPrintable(QString::number(getStandardDeviation(meanF2Modificated, 2, repeatedModificatedSolutionList, 2))));
 
     // cadena con el nombre del subdirectorio que almacenara los resultados
-    QString resultsDirectory = createResultsDirectory();
+    //QString resultsDirectory = createResultsDirectory();
+    resultsDirectory = createResultsDirectory();
 
     QFile file(resultsDirectory+"/resultadosFinalesEjecucionRepetidaMutDir.txt");
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text /*| QIODevice::Append*/))
@@ -1624,3 +1628,131 @@ int MainWindow::getIndexToSortCTable()
 {
     return indexToSortCTable;
 }
+
+
+
+void MainWindow::generateAPResultsOfOriginalMutation()
+{
+    // resultsDirectory cadena que tiene la ruta absoluta al directorio de resultados
+
+    // abrir el archivo individuosFrenteParetoOriginalPorAPsDescendente
+    //QFile file(resultsDirectory+"/individuosFrenteParetoOriginalPorAPsDescendente.txt");
+    QFile file("/home/antonio/Copy/2015/pgcomp/tesis/algoCultural/automatizarResultados/resultados/03.06.2015_13.19.01/individuosFrenteParetoOriginalPorAPsDescendente.txt");
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        Q_ASSERT_X(false, "MainWindow::generateAPResultsOfOriginalMutation()",
+                   "no se pudo abrir el archivo individuosFrenteParetoOriginalPorAPsDescendente.txt para procesar.");
+    }
+
+    QTextStream in(&file);
+    while (!in.atEnd())
+    {
+        QString line = in.readLine();
+        qDebug("linea leida %s", qPrintable(line));
+        processLine(line);
+    }
+
+
+
+}
+
+
+void MainWindow::processLine(QString line)
+{
+    //qDebug("MainWindow::processLine(QString line)");
+
+    QStringList tmpList;
+    QStringList newList;
+    tmpList = line.split(",");
+
+    for (int i=0; i<individualSize; i++)
+    {
+        newList.append(tmpList.at(i*4));
+        newList.append(tmpList.at(i*4+1));
+        newList.append(tmpList.at(i*4+2));
+    }
+
+    QString z;
+    for (int i=0; i<newList.size(); i++)
+    {
+        z.append(newList.at(i));
+        z.append(",");
+    }
+    qDebug("cadena: %s", qPrintable(z));
+
+    ScanningCampaing scan("test_18.1.db", "full", 0);
+    scan.init();
+
+    scan.prepareIRD();
+
+    // vector de canales de la secuencia
+    std::vector<int> channelList;
+
+    // vector de MinChannelTime de la secuencia
+    std::vector<int> minChannelTimeList;
+
+    // vector de MaxChannelTime de la secuencia
+    std::vector<int> maxChannelTimeList;
+
+    for (int i=0; i<individualSize; i++)
+    {
+        channelList.push_back(newList.at(i*3).toInt());
+        minChannelTimeList.push_back(newList.at(i*3+1).toInt());
+        maxChannelTimeList.push_back(newList.at(i*3+2).toInt());
+    }
+
+    //printf("canales: ");
+    for (int j=0; j<channelList.size(); j++)
+    {
+        //printf("%d ", channelList.at(j));
+    }
+    //printf("\n");
+
+    //printf("min: ");
+    for (int j=0; j<minChannelTimeList.size(); j++)
+    {
+        //printf("%d ", minChannelTimeList.at(j));
+    }
+    //printf("\n");
+
+    //printf("max: ");
+    for (int j=0; j<maxChannelTimeList.size(); j++)
+    {
+        //printf("%d ", maxChannelTimeList.at(j));
+    }
+    //printf("\n");
+
+    printf("**************************************************\n");
+
+    int aps = 0;
+    double sum = 0;
+
+    // lista que mantiene los APs obtenidos en cada una de las 30 repeticiones
+    QList<double> apList;
+
+    for (int j=0; j<30; j++)
+    {
+        aps = scan.getAPsForSequence(channelList, minChannelTimeList, maxChannelTimeList);
+        apList.append(aps);
+        //printf("%d,", aps);
+        sum = sum + aps;
+    }
+    double apsAvg = sum/30;
+    qDebug("\npromedio de APs en 30 ejecuciones: %f \n", apsAvg);
+
+
+
+
+}
+
+
+void MainWindow::generateAPResultsOfDirectedMutation()
+{
+    // resultsDirectory cadena que tiene la ruta absoluta al directorio de resultados
+
+
+}
+
+
+
+
