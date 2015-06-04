@@ -1637,20 +1637,23 @@ void MainWindow::generateAPResultsOfOriginalMutation()
 
     // abrir el archivo individuosFrenteParetoOriginalPorAPsDescendente
     //QFile file(resultsDirectory+"/individuosFrenteParetoOriginalPorAPsDescendente.txt");
-    //QFile file("/home/antonio/Copy/2015/pgcomp/tesis/algoCultural/automatizarResultados/resultados/03.06.2015_13.19.01/individuosFrenteParetoOriginalPorAPsDescendente.txt");
-    QFile file("/home/aaraujo/desarrollo/iaa/omocac3cli/resultados/03.06.2015_13.19.01/individuosFrenteParetoOriginalPorAPsDescendente.txt");
+    QFile file("/home/antonio/Copy/2015/pgcomp/tesis/algoCultural/automatizarResultados/resultados/03.06.2015_13.19.01/individuosFrenteParetoOriginalPorAPsDescendente.txt");
+    //QFile file("/home/aaraujo/desarrollo/iaa/omocac3cli/resultados/03.06.2015_13.19.01/individuosFrenteParetoOriginalPorAPsDescendente.txt");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         Q_ASSERT_X(false, "MainWindow::generateAPResultsOfOriginalMutation()",
                    "no se pudo abrir el archivo individuosFrenteParetoOriginalPorAPsDescendente.txt para procesar.");
     }
 
+    QList<double> sequenceConfidenceInterval;
+
     QTextStream in(&file);
     while (!in.atEnd())
     {
         QString line = in.readLine();
+        //QString line = "1,39.02,0,2,39.02,0,3,39.02,0,4,39.02,0,5,39.02,0,6,39.02,0,7,39.02,0,8,39.02,0,9,39.02,0,10,39.02,0,11,39.02,0";
         qDebug("linea leida %s", qPrintable(line));
-        processLine(line);
+        sequenceConfidenceInterval = processLine(line);
     }
 
 
@@ -1658,7 +1661,7 @@ void MainWindow::generateAPResultsOfOriginalMutation()
 }
 
 
-void MainWindow::processLine(QString line)
+QList<double> MainWindow::processLine(QString line)
 {
     //qDebug("MainWindow::processLine(QString line)");
 
@@ -1698,8 +1701,8 @@ void MainWindow::processLine(QString line)
     for (int i=0; i<individualSize; i++)
     {
         channelList.push_back(newList.at(i*3).toInt());
-        minChannelTimeList.push_back(newList.at(i*3+1).toInt());
-        maxChannelTimeList.push_back(newList.at(i*3+2).toInt());
+        minChannelTimeList.push_back(newList.at(i*3+1).toDouble());
+        maxChannelTimeList.push_back(newList.at(i*3+2).toDouble());
     }
 
     //printf("canales: ");
@@ -1723,7 +1726,7 @@ void MainWindow::processLine(QString line)
     }
     //printf("\n");
 
-    printf("**************************************************\n");
+    //printf("**************************************************\n");
 
     int aps = 0;
     double sum = 0;
@@ -1739,18 +1742,25 @@ void MainWindow::processLine(QString line)
         sum = sum + aps;
     }
     double apsAvg = sum/30;
-    qDebug("\npromedio de APs en 30 ejecuciones: %f \n", apsAvg);
+    qDebug("\npromedio de APs en 30 ejecuciones: %f ", apsAvg);
 
     double variance = computeSampleVariance(apList, apsAvg);
-    qDebug("varianza de APs en 30 ejecuciones: %f \n", variance);
+    qDebug("varianza de APs en 30 ejecuciones: %f ", variance);
 
-    double minConfidenceInterval = apsAvg - computeConfidenceInterval(apList, apsAvg);
+    double intervalValue = computeConfidenceInterval(apList, apsAvg);
 
-    double maxConfidenceInterval = apsAvg + computeConfidenceInterval(apList, apsAvg);
+    double minConfidenceInterval = apsAvg - intervalValue;
 
-    qDebug("intervalo de confianza 95 para promedio de APs: %f - %f - %f ", minConfidenceInterval, apsAvg, maxConfidenceInterval);
+    double maxConfidenceInterval = apsAvg + intervalValue;
 
+    qDebug("intervalo de confianza 95 para promedio de APs: %f %f %f ", apsAvg, minConfidenceInterval, maxConfidenceInterval);
 
+    QList<double> confidenceInterval;
+    confidenceInterval.append(minConfidenceInterval);
+    confidenceInterval.append(apsAvg);
+    confidenceInterval.append(maxConfidenceInterval);
+
+    return confidenceInterval;
 }
 
 

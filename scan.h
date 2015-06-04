@@ -585,7 +585,7 @@ class ScanningCampaing {
      */
     int getAPsForSequence(std::vector<int> channelList,  std::vector<int> minChannelTimeList, std::vector<int> maxChannelTimeList) {
 
-	printf("scan.getAPsForSequence()");
+    //printf("scan.getAPsForSequence()");
 
 	int minChannelTime = 0;
         int maxChannelTime = 0;

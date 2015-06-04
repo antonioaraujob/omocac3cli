@@ -530,12 +530,15 @@ public:
     void generateAPResultsOfDirectedMutation();
 
     /**
-     * @brief Procesa una cadena resultante del algoritmo cultural.
+     * @brief Procesa una cadena resultante del algoritmo cultural y obtiene el intervalo de
+     * confianza del 95% para el numero promedio de APs
      *
      * Solo deja los valores de ch,min,max para todos los canales.
      *
+     * @param line cadena a la que se desea calcular el intervalo de confianza
+     * @return intervalo de confianza para el numero promedio de APs  en una lista <min, avg, max>
      */
-    void processLine(QString line);
+    QList<double> processLine(QString line);
 
     /**
      * @brief Calcula la varianza de la muestra
