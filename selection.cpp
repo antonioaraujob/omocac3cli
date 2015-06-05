@@ -92,10 +92,10 @@ void Selection::doSelection(QList<Individual *> population2p, int matches, Norma
             adversaryList.append(adversary);
         }
         // ejecutar los torneos del individuo contra los adversarios
-        makeTournaments(i, selectedIndividual, adversaryList, nGrid);
+        //makeTournaments(i, selectedIndividual, adversaryList, nGrid);
 
         // ejecutar los torneos del invidivuo contra los adversarios y las reglas nuevas
-        //makeTournamentsWithNewRules(i, selectedIndividual, adversaryList, nGrid);
+        makeTournamentsWithNewRules(i, selectedIndividual, adversaryList, nGrid);
 
 
         // incrementar el valor de i
