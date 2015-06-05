@@ -1666,7 +1666,13 @@ void MainWindow::generateAPResultsOfOriginalMutation()
     QString intervalLine;
 
     QTextStream in(&inputFile);
+
+    // contador de cadenas resultantes
     int i=1;
+
+    // valor de latencia maxima para luego generar el grafico con este limite
+    int maxLatency = 0;
+
     while (!in.atEnd())
     {
         QString line = in.readLine();
@@ -1691,7 +1697,14 @@ void MainWindow::generateAPResultsOfOriginalMutation()
 
         out << intervalLine ;
         intervalLine.clear();
+        // incrementar contador de cadenas
         i++;
+
+        // verificar la latencia maxima de las cadenas
+        if (sequenceConfidenceInterval.at(3) > maxLatency)
+        {
+            maxLatency = sequenceConfidenceInterval.at(3);
+        }
     }
 
     intervalLine = "Debian 7.633333 6.810066 8.456600 113 113 113\n";
@@ -1705,10 +1718,44 @@ void MainWindow::generateAPResultsOfOriginalMutation()
     intervalLine = "Android 18.83333 17.60040 20.06627 601 601 601\n";
     out << intervalLine ;
 
+    if (maxLatency <= 601)
+    {
+        maxLatency = 700;
+    }
+
+    outputFile.close();
 
     // hasta este punto se genero el archivo resultsDirectory/dataToPlot.txt
+    generateGnuplotFile(i , maxLatency);
+
+    QString program = "/bin/chmod +x "+ resultsDirectory + "/gnuplotFile.gp";
+    system(qPrintable(program));
 
 
+    //program = resultsDirectory + "/gnuplotFile.gp";
+    //system(qPrintable(program));
+
+
+    // generar archivo generateGraphic.sh
+    generateGraphicOfSequences();
+
+    // asignarle permiso de ejecucion
+    program = "/bin/chmod +x "+ resultsDirectory + "/generateGraphic.sh";
+    system(qPrintable(program));
+
+    // ejecutar el script
+    program = resultsDirectory + "/generateGraphic.sh";
+    system(qPrintable(program));
+
+
+    QString h = QDir::currentPath();
+
+    // copiar el archivo settings.ini al directorio de resultados
+    program = "cp "+ h + "/settings.ini "+ resultsDirectory ;
+    system(qPrintable(program));
+
+
+    return;
 }
 
 
@@ -1821,6 +1868,127 @@ void MainWindow::generateAPResultsOfDirectedMutation()
 {
     // resultsDirectory cadena que tiene la ruta absoluta al directorio de resultados
 
+    // abrir el archivo individuosFrenteParetoOriginalPorAPsDescendente
+    QFile inputFile(resultsDirectory+"/individuosFrenteParetoModificadoPorAPsDescendente.txt");
+    //QFile inputFile("/home/antonio/Copy/2015/pgcomp/tesis/algoCultural/automatizarResultados/resultados/03.06.2015_13.19.01/individuosFrenteParetoOriginalPorAPsDescendente.txt");
+    //QFile inputFile("/home/aaraujo/desarrollo/iaa/omocac3cli/resultados/03.06.2015_13.19.01/individuosFrenteParetoOriginalPorAPsDescendente.txt");
+    if (!inputFile.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        Q_ASSERT_X(false, "MainWindow::generateAPResultsOfOriginalMutation()",
+                   "no se pudo abrir el archivo individuosFrenteParetoOriginalPorAPsDescendente.txt para procesar.");
+    }
+
+
+
+    // crear archivo de salida
+    QFile outputFile(resultsDirectory+"/dataToPlot.txt");
+    //QFile outputFile("/tmp/dataToPlot.txt");
+    if (outputFile.exists())
+    {
+        outputFile.remove();
+    }
+    if (!outputFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append))
+    {
+        QString msg = "No se pudo crear el archivo /tmp/.txt";
+        qDebug(qPrintable(msg));
+        return;
+    }
+    QTextStream out(&outputFile);
+
+    QList<double> sequenceConfidenceInterval;
+    QString intervalLine;
+
+    QTextStream in(&inputFile);
+
+    // contador de cadenas resultantes
+    int i=1;
+
+    // valor de latencia maxima para luego generar el grafico con este limite
+    int maxLatency = 0;
+
+    while (!in.atEnd())
+    {
+        QString line = in.readLine();
+        //QString line = "1,39.02,0,2,39.02,0,3,39.02,0,4,39.02,0,5,39.02,0,6,39.02,0,7,39.02,0,8,39.02,0,9,39.02,0,10,39.02,0,11,39.02,0";
+        qDebug("linea leida %s", qPrintable(line));
+        sequenceConfidenceInterval = processLine(line);
+
+        intervalLine.append("cadena"+QString::number(i));
+        intervalLine.append(" ");
+        intervalLine.append(QString::number(sequenceConfidenceInterval.at(0)));
+        intervalLine.append(" ");
+        intervalLine.append(QString::number(sequenceConfidenceInterval.at(1)));
+        intervalLine.append(" ");
+        intervalLine.append(QString::number(sequenceConfidenceInterval.at(2)));
+        intervalLine.append(" ");
+        intervalLine.append(QString::number(sequenceConfidenceInterval.at(3)));
+        intervalLine.append(" ");
+        intervalLine.append(QString::number(sequenceConfidenceInterval.at(3)));
+        intervalLine.append(" ");
+        intervalLine.append(QString::number(sequenceConfidenceInterval.at(3)));
+        intervalLine.append("\n");
+
+        out << intervalLine ;
+        intervalLine.clear();
+        // incrementar contador de cadenas
+        i++;
+
+        // verificar la latencia maxima de las cadenas
+        if (sequenceConfidenceInterval.at(3) > maxLatency)
+        {
+            maxLatency = sequenceConfidenceInterval.at(3);
+        }
+    }
+
+    intervalLine = "Debian 7.633333 6.810066 8.456600 113 113 113\n";
+    out << intervalLine ;
+    intervalLine = "Windows 10.63333 9.764601 11.50206 168 168 168\n";
+    out << intervalLine ;
+    intervalLine = "Meego 10.7 9.607376 11.79262 184 184 184\n";
+    out << intervalLine ;
+    intervalLine = "iOS 16.4 14.96683 17.83317 429 429 429\n";
+    out << intervalLine ;
+    intervalLine = "Android 18.83333 17.60040 20.06627 601 601 601\n";
+    out << intervalLine ;
+
+    if (maxLatency <= 601)
+    {
+        maxLatency = 700;
+    }
+
+    outputFile.close();
+
+    // hasta este punto se genero el archivo resultsDirectory/dataToPlot.txt
+    generateGnuplotFile(i , maxLatency);
+
+    QString program = "/bin/chmod +x "+ resultsDirectory + "/gnuplotFile.gp";
+    system(qPrintable(program));
+
+
+    //program = resultsDirectory + "/gnuplotFile.gp";
+    //system(qPrintable(program));
+
+
+    // generar archivo generateGraphic.sh
+    generateGraphicOfSequences();
+
+    // asignarle permiso de ejecucion
+    program = "/bin/chmod +x "+ resultsDirectory + "/generateGraphic.sh";
+    system(qPrintable(program));
+
+    // ejecutar el script
+    program = resultsDirectory + "/generateGraphic.sh";
+    system(qPrintable(program));
+
+
+    QString h = QDir::currentPath();
+
+    // copiar el archivo settings.ini al directorio de resultados
+    program = "cp "+ h + "/settings.ini "+ resultsDirectory ;
+    system(qPrintable(program));
+
+
+    return;
 
 }
 
@@ -1857,3 +2025,122 @@ double MainWindow::computeConfidenceInterval(QList<double> sampleList, double me
 
 
 
+void MainWindow::generateGnuplotFile(int sequences, int maxLatency)
+{
+    // crear archivo de salida
+    QFile outputFile(resultsDirectory+"/gnuplotFile.gp");
+    if (outputFile.exists())
+    {
+        outputFile.remove();
+    }
+    if (!outputFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append))
+    {
+        QString msg = "No se pudo crear el archivo /tmp/.txt";
+        Q_ASSERT_X(false, "MainWindow::generateGnuplotFile()", "no se pudo generar el archivo gnuplot");
+        qDebug(qPrintable(msg));
+        return;
+    }
+    QTextStream out(&outputFile);
+
+    QString string = "#!/usr/bin/gnuplot \n";
+    out << string ;
+
+    string = "clear \n";
+    out << string ;
+
+    string = "reset\n";
+    out << string ;
+
+    string = "set xtics rotate out\n";
+    out << string ;
+
+    string = "set style data histogram\n";
+    out << string ;
+
+    string = "set style fill solid border\n";
+    out << string ;
+
+    string = "set style histogram errorbars linewidth 1\n";
+    out << string ;
+
+    string = "set style fill solid 0.3\n";
+    out << string ;
+
+    string = "set bars front\n";
+    out << string ;
+
+    string = "set title \"Intervalos de confianza 95% para cadenas\"\n";
+    out << string ;
+
+    // verificar el numero de cadenas + 5 de referencia
+    //string = "set xrange [-1:15]\n";
+    string = "set xrange [-1:";
+    string.append(QString::number(sequences+5)+"]\n");
+    out << string ;
+
+    string = "set ylabel \"Numero de APs\"\n";
+    out << string ;
+
+    //string = "set yrange [1:30]\n";
+    //out << string ;
+
+    // verificar la latencia maxima
+    // set yrange [1:70]
+    string = "set yrange [1:";
+
+    //int ymax =
+    string.append(QString::number(((maxLatency+10)*0.1))+"]\n");
+    out << string ;
+
+    string = "set y2label \"Latencia *10 (ms)\"\n";
+    out << string ;
+
+    string = "set grid\n";
+    out << string ;
+
+    string = "set term png\n";
+    out << string ;
+
+    string = "set output \"grafico.png\"\n";
+    out << string ;
+
+    string = "plot \"" + resultsDirectory + "/dataToPlot.txt\" using 2:3:4:xticlabel(1) title \"APs\", \"" + resultsDirectory + "/dataToPlot.txt\" using ($5*0.1):($6*0.1):($7*0.1):xticlabel(1) title \"Latencia\"\n";
+    out << string ;
+
+    string = "replot\n";
+    out << string ;
+
+
+    return;
+}
+
+void MainWindow::generateGraphicOfSequences()
+{
+    // crear archivo de salida
+    QFile outputFile(resultsDirectory+"/generateGraphic.sh");
+    if (outputFile.exists())
+    {
+        outputFile.remove();
+    }
+    if (!outputFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append))
+    {
+        QString msg = "No se pudo crear el archivo /tmp/.txt";
+        Q_ASSERT_X(false, "MainWindow::generateGraphicOfSequences()", "no se pudo generar el archivo gnuplot");
+        qDebug(qPrintable(msg));
+        return;
+    }
+    QTextStream out(&outputFile);
+
+    QString string = "";
+
+    string = "#!/bin/bash\n";
+    out << string ;
+
+    string = "cd "+resultsDirectory+"\n";
+    out << string ;
+
+    string = "./gnuplotFile.gp\n";
+    out << string ;
+
+    return;
+}

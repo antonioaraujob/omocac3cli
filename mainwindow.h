@@ -555,6 +555,21 @@ public:
      * @return valor que se suma y resta al promedio para construir el intervalo de confianza
      */
     double computeConfidenceInterval(QList<double> sampleList, double mean);
+
+
+    /**
+     * @brief Genera un script para el programa gnuplot que luego generara el grafico de comparacion
+     * @param sequences numero de cadenas resultantes de la simulacion
+     * @param maxLatency latencia maxima para establecer el valor maximo del eje Y
+     */
+    void generateGnuplotFile(int sequences, int maxLatency);
+
+    /**
+     * @brief Genera un script generateGraphic.sh que al ejecutar construye el gráfico de comparacion
+     * de cadenas resultantes y las cadenas de referencia a traves de gnuplot
+     */
+    void generateGraphicOfSequences();
+
 };
 
 #endif // MAINWINDOW_H

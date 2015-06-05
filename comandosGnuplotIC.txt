@@ -17,7 +17,7 @@
 
 clear
 reset
-unset key
+set terminal png
 # Make the x axis labels easier to read.
 set xtics rotate out
 # Select histogram data
@@ -29,12 +29,12 @@ set style histogram errorbars linewidth 1
 # Make the bars semi-transparent so that the errorbars are easier to see.
 set style fill solid 0.3
 set bars front
-set title "Intervalos de confianza 95% para cadenas resultantes y dispositivos de referencia"
-set xrange [0:10]
+set title "Intervalos de confianza 95% para cadenas"
+set xrange [-1:10]
 set ylabel "Numero de APs"
 set yrange [1:100]
-set y2label "Latencia (ms)"
+set y2label "Latencia * 10 (ms)"
 #plot './intervalos' using 2:3:4:xticlabel(1)
 set grid
 #plot './intervalos' using 2:3:4:xticlabel(1), "./intervalos" using 5:6:7:xticlabel(1)
-plot './dataToPlot.txt' using 2:3:4:xticlabel(1), "./dataToPlot.txt" using ($5*0.1):($6*0.1):($7*0.1):xticlabel(1)
+plot './dataToPlot.txt' using 2:3:4:xticlabel(1) title "APs", "./dataToPlot.txt" using ($5*0.1):($6*0.1):($7*0.1):xticlabel(1) title "Latencia"
