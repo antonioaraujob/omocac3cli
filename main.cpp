@@ -23,8 +23,8 @@ int main(int argc, char *argv[])
     }
     else if (mw.getDoOriginalAlgorithm())
     {
-        mw.generateAPResultsOfOriginalMutation();
-        return 0;
+        //mw.generateAPResultsOfOriginalMutation();
+        //return 0;
 
 
         // se ejecuta el algoritmo cultural una vez de acuerdo a los parametros

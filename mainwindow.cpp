@@ -1636,26 +1636,77 @@ void MainWindow::generateAPResultsOfOriginalMutation()
     // resultsDirectory cadena que tiene la ruta absoluta al directorio de resultados
 
     // abrir el archivo individuosFrenteParetoOriginalPorAPsDescendente
-    //QFile file(resultsDirectory+"/individuosFrenteParetoOriginalPorAPsDescendente.txt");
-    QFile file("/home/antonio/Copy/2015/pgcomp/tesis/algoCultural/automatizarResultados/resultados/03.06.2015_13.19.01/individuosFrenteParetoOriginalPorAPsDescendente.txt");
-    //QFile file("/home/aaraujo/desarrollo/iaa/omocac3cli/resultados/03.06.2015_13.19.01/individuosFrenteParetoOriginalPorAPsDescendente.txt");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    QFile inputFile(resultsDirectory+"/individuosFrenteParetoOriginalPorAPsDescendente.txt");
+    //QFile inputFile("/home/antonio/Copy/2015/pgcomp/tesis/algoCultural/automatizarResultados/resultados/03.06.2015_13.19.01/individuosFrenteParetoOriginalPorAPsDescendente.txt");
+    //QFile inputFile("/home/aaraujo/desarrollo/iaa/omocac3cli/resultados/03.06.2015_13.19.01/individuosFrenteParetoOriginalPorAPsDescendente.txt");
+    if (!inputFile.open(QIODevice::ReadOnly | QIODevice::Text))
     {
         Q_ASSERT_X(false, "MainWindow::generateAPResultsOfOriginalMutation()",
                    "no se pudo abrir el archivo individuosFrenteParetoOriginalPorAPsDescendente.txt para procesar.");
     }
 
-    QList<double> sequenceConfidenceInterval;
 
-    QTextStream in(&file);
+
+    // crear archivo de salida
+    QFile outputFile(resultsDirectory+"/dataToPlot.txt");
+    //QFile outputFile("/tmp/dataToPlot.txt");
+    if (outputFile.exists())
+    {
+        outputFile.remove();
+    }
+    if (!outputFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append))
+    {
+        QString msg = "No se pudo crear el archivo /tmp/.txt";
+        qDebug(qPrintable(msg));
+        return;
+    }
+    QTextStream out(&outputFile);
+
+    QList<double> sequenceConfidenceInterval;
+    QString intervalLine;
+
+    QTextStream in(&inputFile);
+    int i=1;
     while (!in.atEnd())
     {
         QString line = in.readLine();
         //QString line = "1,39.02,0,2,39.02,0,3,39.02,0,4,39.02,0,5,39.02,0,6,39.02,0,7,39.02,0,8,39.02,0,9,39.02,0,10,39.02,0,11,39.02,0";
         qDebug("linea leida %s", qPrintable(line));
         sequenceConfidenceInterval = processLine(line);
+
+        intervalLine.append("cadena"+QString::number(i));
+        intervalLine.append(" ");
+        intervalLine.append(QString::number(sequenceConfidenceInterval.at(0)));
+        intervalLine.append(" ");
+        intervalLine.append(QString::number(sequenceConfidenceInterval.at(1)));
+        intervalLine.append(" ");
+        intervalLine.append(QString::number(sequenceConfidenceInterval.at(2)));
+        intervalLine.append(" ");
+        intervalLine.append(QString::number(sequenceConfidenceInterval.at(3)));
+        intervalLine.append(" ");
+        intervalLine.append(QString::number(sequenceConfidenceInterval.at(3)));
+        intervalLine.append(" ");
+        intervalLine.append(QString::number(sequenceConfidenceInterval.at(3)));
+        intervalLine.append("\n");
+
+        out << intervalLine ;
+        intervalLine.clear();
+        i++;
     }
 
+    intervalLine = "Debian 7.633333 6.810066 8.456600 113 113 113\n";
+    out << intervalLine ;
+    intervalLine = "Windows 10.63333 9.764601 11.50206 168 168 168\n";
+    out << intervalLine ;
+    intervalLine = "Meego 10.7 9.607376 11.79262 184 184 184\n";
+    out << intervalLine ;
+    intervalLine = "iOS 16.4 14.96683 17.83317 429 429 429\n";
+    out << intervalLine ;
+    intervalLine = "Android 18.83333 17.60040 20.06627 601 601 601\n";
+    out << intervalLine ;
+
+
+    // hasta este punto se genero el archivo resultsDirectory/dataToPlot.txt
 
 
 }
@@ -1675,6 +1726,7 @@ QList<double> MainWindow::processLine(QString line)
         newList.append(tmpList.at(i*4+1));
         newList.append(tmpList.at(i*4+2));
     }
+    QString latency = tmpList.at(individualSize*4+1);
 
     QString z;
     for (int i=0; i<newList.size(); i++)
@@ -1756,9 +1808,10 @@ QList<double> MainWindow::processLine(QString line)
     qDebug("intervalo de confianza 95 para promedio de APs: %f %f %f ", apsAvg, minConfidenceInterval, maxConfidenceInterval);
 
     QList<double> confidenceInterval;
-    confidenceInterval.append(minConfidenceInterval);
     confidenceInterval.append(apsAvg);
+    confidenceInterval.append(minConfidenceInterval);
     confidenceInterval.append(maxConfidenceInterval);
+    confidenceInterval.append(latency.toDouble());
 
     return confidenceInterval;
 }

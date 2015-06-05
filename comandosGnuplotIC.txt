@@ -36,4 +36,5 @@ set yrange [1:100]
 set y2label "Latencia (ms)"
 #plot './intervalos' using 2:3:4:xticlabel(1)
 set grid
-plot './intervalos' using 2:3:4:xticlabel(1), "./intervalos" using 5:6:7:xticlabel(1)
+#plot './intervalos' using 2:3:4:xticlabel(1), "./intervalos" using 5:6:7:xticlabel(1)
+plot './dataToPlot.txt' using 2:3:4:xticlabel(1), "./dataToPlot.txt" using ($5*0.1):($6*0.1):($7*0.1):xticlabel(1)
