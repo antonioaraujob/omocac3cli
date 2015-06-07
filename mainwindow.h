@@ -575,6 +575,18 @@ public:
      * generados en la CTable
      */
     void reportCTableHistory();
+
+    /**
+     * @brief Genera un archivo pdf con las tablas de individuos resultantes de la simulacion con
+     *mutacion dirigida de acuerdo al tamano de los individuos
+     */
+    void generateMutatedResultsTable();
+
+    /**
+     * @brief Genera un archivo pdf con las tablas de individuos resultantes de la simulacion con
+     * mutacion original de acuerdo al tamano de los individuos
+     */
+    void generateResultsTable();
 };
 
 #endif // MAINWINDOW_H

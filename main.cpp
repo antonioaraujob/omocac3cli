@@ -33,6 +33,8 @@ int main(int argc, char *argv[])
         mw.executeAlgorithmRepeated();
 
         mw.generateAPResultsOfOriginalMutation();
+
+        mw.generateResultsTable();
     }
     else // ejecutarMutacionDirigida
     {
@@ -41,6 +43,8 @@ int main(int argc, char *argv[])
         mw.generateAPResultsOfDirectedMutation();
 
         mw.reportCTableHistory();
+
+        mw.generateMutatedResultsTable();
     }
 
     qDebug("return 0");
