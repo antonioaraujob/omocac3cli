@@ -343,7 +343,7 @@ public:
     void reportIndividualOrderedByApInGenes(QList<Individual*> list, QString resultsSubdirectory, QString fileName, bool ascending=true);
 
     /**
-     * @brief reordena la lista de genes pasada como argumento con respecto
+     * @brief reordena la lista de genes pasada como argumento con respecto a latencia en genes que tienen igual numero de APs
      * @param list lista de genes a ordenar
      * @param ascending bandera para especificar si el orden es ascendente o descendente
      */
@@ -570,6 +570,11 @@ public:
      */
     void generateGraphicOfSequences();
 
+    /**
+     * @brief Escribe un archivo en el directorio resultado de cada ejecucion con los superindidivuos
+     * generados en la CTable
+     */
+    void reportCTableHistory();
 };
 
 #endif // MAINWINDOW_H

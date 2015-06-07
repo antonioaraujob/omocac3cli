@@ -404,7 +404,13 @@ public:
      */
     void printList(QList<Individual*> list);
 
-
+    /**
+     * @brief Genera el reporte de la CTable con los superindividuos historicos utilizados
+     * durante la simulacion
+     *
+     * @param resultsDirectory directorio de resultados
+     */
+    void reportCTableHistory(QString resultsDirectory);
 };
 
 #endif // SIMULATION_H

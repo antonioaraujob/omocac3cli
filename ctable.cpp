@@ -1,4 +1,7 @@
 #include "ctable.h"
+#include <QFile>
+#include <QTextStream>
+
 
 /**
  * @brief Funcion de comparacion de CTableGen con respecto al valor de indexA
@@ -143,7 +146,7 @@ void CTable::clearCTable()
         tmpList.append(gen);
     }
 
-    // agregar la lista tmlList al registro historico
+    // agregar la lista tmpList al registro historico
     historicSuperIndividualList.append(tmpList);
 
     // limpiar la lista del super individuo actual
@@ -151,4 +154,53 @@ void CTable::clearCTable()
 }
 
 
+void CTable::reportCTableHistory(QString resultsDirectory)
+{
+    // crear archivo de salida
+    QFile outputFile(resultsDirectory+"/ctableHistory.txt");
+    if (outputFile.exists())
+    {
+        outputFile.remove();
+    }
+    if (!outputFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Append))
+    {
+        QString msg = "No se pudo crear el archivo /tmp/.txt";
+        Q_ASSERT_X(false, "CTable::reportCTableHistory", "no se pudo generar el archivo historico de CTable");
+        qDebug(qPrintable(msg));
+        return;
+    }
+    QTextStream out(&outputFile);
+
+    QString stringLine;
+
+    // lista temporal de genes
+    QList<CTableGen *> tmpList;
+
+
+
+    for (int i = 0; i < historicSuperIndividualList.size(); i++)
+    {
+        tmpList = historicSuperIndividualList.at(i);
+
+        CTableGen * gen;
+
+        for (int j = 0; j < tmpList.size(); j++)
+        {
+            gen = tmpList.at(j);
+            stringLine.append(QString::number(gen->getChannel()));
+            stringLine.append(",");
+            stringLine.append(QString::number(gen->getMinChannelTime()));
+            stringLine.append(",");
+            stringLine.append(QString::number(gen->getMaxChannelTime()));
+
+            if ( j!= (tmpList.size()-1) )
+            {
+                stringLine.append(",");
+            }
+        }
+        out << stringLine << "\n";
+        stringLine.clear();
+    }
+
+}
 

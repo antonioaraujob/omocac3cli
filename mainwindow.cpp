@@ -166,7 +166,8 @@ MainWindow::MainWindow()
     scanningCampaing->init();
     scanningCampaing->prepareIRD();
 
-    //getAPs(11, 10, 20);
+    Q_ASSERT_X(ctableWindow <= individualSize, "MainWindow::MainWindow()",
+               "No se puede iniciar la simulacion con tamano de ventana de CTable mayor que el tamano del individuo.");
 
 }
 
@@ -1122,7 +1123,7 @@ void MainWindow::reportIndividualOrderedByApInGenes(QList<Individual*> list, QSt
         if (ascending)
         {
 
-
+            // reordenar la lista en caso de existan genes con igual numero de APs con respecto a la latencia
             QList<Gen*> reorderListByAP = reorderAP(genList, true);
 
             // recorrer la lista de genes de forma ascendente
@@ -1132,6 +1133,7 @@ void MainWindow::reportIndividualOrderedByApInGenes(QList<Individual*> list, QSt
                 for (int j=0; j<4; j++)
                 {
                     str.append(QString::number(reorderListByAP.at(i)->getValue(j)));
+                    //str.append(QString::number(genList.at(i)->getValue(j)));
                     str.append(",");
                 }
 
@@ -1153,6 +1155,8 @@ void MainWindow::reportIndividualOrderedByApInGenes(QList<Individual*> list, QSt
 
             }
             */
+
+            // lista en orden descendente
             QList<Gen*> invertedList;
             Gen * gen;
             for(int i=genList.count(); i>0; i--)
@@ -1161,12 +1165,16 @@ void MainWindow::reportIndividualOrderedByApInGenes(QList<Individual*> list, QSt
                 invertedList.append(gen);
             }
 
+            // reordenar la lista en caso de existan genes con igual numero de APs con respecto a la latencia
             QList<Gen*> reorderListByAP = reorderAP(invertedList, true);
+
+            //for(int i=0; i<invertedList.size(); i++)
             for(int i=0; i<reorderListByAP.count(); i++)
             {
                 for (int j=0; j<4; j++)
                 {
                     str.append(QString::number(reorderListByAP.at(i)->getValue(j)));
+                    //str.append(QString::number(invertedList.at(i)->getValue(j)));
                     str.append(",");
                 }
 
@@ -1203,6 +1211,13 @@ QList<Gen*> MainWindow::reorderAP(QList<Gen*> originalList, bool ascending)
     QList<Gen*> orderedList;
 
     Gen * gen1;
+
+    // si solo hay un gen no se ordena nada
+    if (originalList.size()==1)
+    {
+        return originalList;
+    }
+
 
 
     while(i<originalList.count())
@@ -2143,4 +2158,12 @@ void MainWindow::generateGraphicOfSequences()
     out << string ;
 
     return;
+}
+
+
+
+void MainWindow::reportCTableHistory()
+{
+
+    simulation->reportCTableHistory(resultsDirectory);
 }

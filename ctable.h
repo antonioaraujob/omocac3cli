@@ -91,6 +91,14 @@ public:
      */
     void clearCTable();
 
+    /**
+     * @brief Genera un archivo con los individuos historicos de la CTable a lo largo de la
+     * simulacion
+     *
+     * @param resultsDirectory directorio de resultados
+     */
+    void reportCTableHistory(QString resultsDirectory);
+
 };
 
 #endif // CTABLE_H
