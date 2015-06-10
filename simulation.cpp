@@ -185,9 +185,9 @@ void Simulation::initializeSmartPopulation()
     }
 */
 
-/*
+
     // inicializacion de la poblacion
-    for (int i = 0; i < 9; i++)
+    for (int i = 0; i < populationSize-1; i++)
     {
         individuo = new Individual();
 
@@ -201,34 +201,36 @@ void Simulation::initializeSmartPopulation()
 
         //out << individuo->getIndividualAsQString() << endl;
     }
-*/
+
 
     if (individualSize == 1)
     {
         // agregar individuos de acuerdo a PIMRC tamano 1 latencia 8 ms
-        for (int j = 0; j < populationSize; j++)
+        /*
+        for (int j = 0; j < 1; j++)
         {
             individuo = new Individual(true, "6,5,3");
             individuo->getAverageOnFullScanning();
             populationList.append(individuo);
         }
+        */
 
-        /*
+
         // agregar individuos de acuerdo a PIMRC tamano 1 latencia 19 ms
-        for (int j = 0; j < populationSize; j++)
+        for (int j = 0; j < 1; j++)
         {
             individuo = new Individual(true, "6,9,10");
             individuo->getAverageOnFullScanning();
             populationList.append(individuo);
         }
 
-        */
+
 
     }
     else if (individualSize == 2)
     {
         // agregar individuos de acuerdo a PIMRC tamano 2 latencia 25 ms
-        for (int j = 0; j < populationSize; j++)
+        for (int j = 0; j < 1/*populationSize*/; j++)
         {
             individuo = new Individual(true, "6,12,3,1,8,2");
             individuo->getAverageOnFullScanning();
@@ -239,30 +241,32 @@ void Simulation::initializeSmartPopulation()
     else if (individualSize == 3)
     {
         // agregar individuos de acuerdo a PIMRC tamano 3 latencia 44 ms
+        /*
         for (int j = 0; j < populationSize; j++)
         {
             individuo = new Individual(true, "6,15,5,1,7,3,11,7,7");
             individuo->getAverageOnFullScanning();
             populationList.append(individuo);
         }
+        */
 
 
-        /*
+
         // agregar individuos de acuerdo a PIMRC tamano 3 latencia 68 ms
-        for (int j = 0; j < populationSize; j++)
+        for (int j = 0; j < 1/*populationSize*/; j++)
         {
             individuo = new Individual(true, "6,15,13,1,15,11,11,7,7");
             individuo->getAverageOnFullScanning();
             populationList.append(individuo);
         }
 
-        */
+
 
     }
     else if (individualSize == 4)
     {
         // agregar individuos de acuerdo a PIMRC tamano 4 latencia 100 ms
-        for (int j = 0; j < populationSize; j++)
+        for (int j = 0; j < 1/*populationSize*/; j++)
         {
             individuo = new Individual(true, "6,15,13,1,15,13,11,15,13,9,8,8");
             individuo->getAverageOnFullScanning();
@@ -274,7 +278,7 @@ void Simulation::initializeSmartPopulation()
     else if (individualSize == 8)
     {
         // agregar individuos de acuerdo a PIMRC tamano 8 latencia 160 ms
-        for (int j = 0; j < populationSize; j++)
+        for (int j = 0; j < 1/*populationSize*/; j++)
         {
             individuo = new Individual(true, "6,15,13,1,15,13,11,15,13,9,12,12,10,4,4,3,8,8,8,12,8,7,4,4");
             individuo->getAverageOnFullScanning();
@@ -285,7 +289,7 @@ void Simulation::initializeSmartPopulation()
     else if (individualSize == 11)
     {
         // agregar individuos de acuerdo a PIMRC tamano 11 latencia
-        for (int j = 0; j < populationSize; j++)
+        for (int j = 0; j < 1/*populationSize*/; j++)
         {
             individuo = new Individual(true, "6,15,13,1,15,13,11,15,15,9,15,15,10,15,10,3,11,11,8,7,3,7,7,7,5,6,4,4,6,3,2,3,3");
             individuo->getAverageOnFullScanning();

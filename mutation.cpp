@@ -1369,7 +1369,7 @@ void Mutation::directedMutation(CTable * ct, Individual * father)
         // indice del canal en el cual se debe colocar el nuevo canal
         index = ct->searchChannelInList(gen->getChannel(), convertedIndividual);
 
-        // reemplazar
+        // solo reemplazar
         if (index == -1)
         {
             convertedIndividual.replace(i, gen);
@@ -1388,6 +1388,53 @@ void Mutation::directedMutation(CTable * ct, Individual * father)
         offspring->setParameter(((i*4)+2), convertedIndividual.at(i)->getMaxChannelTime());
         offspring->setParameter(((i*4)+3), convertedIndividual.at(i)->getAPs());
     }
+    qDebug("revisa");
+
+    // *******************************************************
+    double min = 0;
+    double max = 0;
+
+    // prueba de aumentar temporizador a los canales de w
+    for (int i = 0; i < windowGenesList.size(); i++)
+    {
+        min = offspring->getParameter((i*4)+1);
+        min = min + 1;
+        if (min > 15)
+        {
+            min = 15;
+        }
+        max = offspring->getParameter((i*4)+2);
+        max = max + 5;
+        if (max > 90 )
+        {
+            max = 90;
+        }
+
+        offspring->setParameter(((i*4)+1), min);
+        offspring->setParameter(((i*4)+2), max);
+
+    }
+
+
+    // prueba de disminuir los temporizadores a los canales 11-w
+    // restar 5 a min y restar 10 a max
+    for (int i = windowGenesList.size(); i < offspring->getIndividualSize() ; i++)
+    {
+        min = offspring->getParameter((i*4)+1) - 5 ;
+        if (min <= 0)
+        {
+            min = 1;
+        }
+        max = offspring->getParameter((i*4)+2) - 10;
+        if (max <= 0)
+        {
+            max = 1;
+        }
+        offspring->setParameter(((i*4)+1), min);
+        offspring->setParameter(((i*4)+2), max);
+    }
+
+    // *******************************************************
 
     offspring->getAverageOnFullScanning();
 

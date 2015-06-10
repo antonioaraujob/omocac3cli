@@ -129,6 +129,8 @@ int CTable::searchChannelInList(int ch, QList<CTableGen *> list)
             break;
         }
     }
+
+    // si index == -1 no se encontro el canal en el offspring
     return index;
     //Q_ASSERT_X(true, "CTable::searchChannelInList", "Se esta buscando un canal en la lista de genes que no existe");
 }
