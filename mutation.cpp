@@ -1391,6 +1391,7 @@ void Mutation::directedMutation(CTable * ct, Individual * father)
     qDebug("revisa");
 
     // *******************************************************
+
     double min = 0;
     double max = 0;
 
@@ -1423,18 +1424,55 @@ void Mutation::directedMutation(CTable * ct, Individual * father)
         min = offspring->getParameter((i*4)+1) - 5 ;
         if (min <= 0)
         {
-            min = 1;
+            min = 3;
         }
         max = offspring->getParameter((i*4)+2) - 10;
         if (max <= 0)
         {
-            max = 1;
+            max = 3;
         }
         offspring->setParameter(((i*4)+1), min);
         offspring->setParameter(((i*4)+2), max);
     }
 
     // *******************************************************
+
+    // *******************************************************
+/*
+    // Definir una latencia máxima L
+    // obtener l_w = L/4
+    // Para cada gen de W
+    //     asignar temporizadores al canal que sumen l_w
+
+    // obtener l_t-w = l_w/8
+    // Para cada gen de TamañoIndividuo-W
+    //    asignar temporizadores al canal que sumen l_t-w
+
+    double min = 0;
+    double max = 0;
+
+    double L = 601;
+    double lw = 150;//L/11;
+    for (int i = 0; i < windowGenesList.size(); i++)
+    {
+        min = 15;
+        max = 135;
+
+        offspring->setParameter(((i*4)+1), min);
+        offspring->setParameter(((i*4)+2), max);
+
+    }
+    double ltw = 18;
+    for (int i = windowGenesList.size(); i < offspring->getIndividualSize() ; i++)
+        {
+            min = 17;
+            max = 1;
+            offspring->setParameter(((i*4)+1), min);
+            offspring->setParameter(((i*4)+2), max);
+        }
+*/
+    // *******************************************************
+
 
     offspring->getAverageOnFullScanning();
 
