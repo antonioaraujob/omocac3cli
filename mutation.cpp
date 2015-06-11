@@ -1391,7 +1391,7 @@ void Mutation::directedMutation(CTable * ct, Individual * father)
     qDebug("revisa");
 
     // *******************************************************
-
+/*
     double min = 0;
     double max = 0;
 
@@ -1434,7 +1434,7 @@ void Mutation::directedMutation(CTable * ct, Individual * father)
         offspring->setParameter(((i*4)+1), min);
         offspring->setParameter(((i*4)+2), max);
     }
-
+*/
     // *******************************************************
 
     // *******************************************************

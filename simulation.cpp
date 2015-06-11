@@ -185,7 +185,7 @@ void Simulation::initializeSmartPopulation()
     }
 */
 
-
+/*
     // inicializacion de la poblacion
     for (int i = 0; i < populationSize-1; i++)
     {
@@ -201,7 +201,7 @@ void Simulation::initializeSmartPopulation()
 
         //out << individuo->getIndividualAsQString() << endl;
     }
-
+*/
 
     if (individualSize == 1)
     {
@@ -288,13 +288,33 @@ void Simulation::initializeSmartPopulation()
     }
     else if (individualSize == 11)
     {
+        /*
         // agregar individuos de acuerdo a PIMRC tamano 11 latencia
-        for (int j = 0; j < 1/*populationSize*/; j++)
+        for (int j = 0; j < 1; j++)
         {
             individuo = new Individual(true, "6,15,13,1,15,13,11,15,15,9,15,15,10,15,10,3,11,11,8,7,3,7,7,7,5,6,4,4,6,3,2,3,3");
             individuo->getAverageOnFullScanning();
             populationList.append(individuo);
         }
+        */
+
+        // agregar individuos de acuerdo a la cadena
+        // 11,15,135,1,15,135,6,15,135,9,17,1,5,17,1,2,17,1,10,17,1,8,17,1,4,17,1,7,17,1,3,17,1
+        for (int j = 0; j < populationSize; j++)
+        {
+            // cadena contruida 150/150/150/18 con el orden de la proporcion de AP de la topologia
+            //individuo = new Individual(true, "11,15,135,1,15,135,6,15,135,7,17,1,9,17,1,10,17,1,3,17,1,2,17,1,8,17,1,4,17,1,5,17,1");
+
+
+            //individuo = new Individual(true, "11,15,135,1,15,135,6,15,135,9,17,1,5,17,1,2,17,1,10,17,1,8,17,1,4,17,1,7,17,1,3,17,1");
+
+            // cadena Android
+            individuo = new Individual(true, "1,53,1,2,53,1,3,53,1,4,53,1,5,53,1,6,53,1,7,53,1,8,53,1,9,53,1,10,53,1,11,53,1");
+
+            individuo->getAverageOnFullScanning();
+            populationList.append(individuo);
+        }
+
 
     }
     else
