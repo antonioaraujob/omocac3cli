@@ -795,11 +795,15 @@ void Individual::calculateLatencyValue()
 
     if (getEmulateScanning())
     {
-        /*
+
+        double aps = 0;
         for (int i=0; i<individualSize; i++)
         {
             minChannelTime = parametersList.at((i*4)+1);
-            if (minChannelTime != 0)
+
+            // verificar que el valor del AP encontrados sea >0 para sumar el Max
+            aps = parametersList.at((i*4)+3);
+            if (aps > 0)
             {
                 maxChannelTime = parametersList.at((i*4)+2);
             }
@@ -809,13 +813,16 @@ void Individual::calculateLatencyValue()
             }
             latency = latency + minChannelTime + maxChannelTime;
         }
-        */
+
+
+        /*
         for (int i=0; i<individualSize; i++)
         {
             minChannelTime = parametersList.at((i*4)+1);
             maxChannelTime = parametersList.at((i*4)+2);
             latency = latency + minChannelTime + maxChannelTime;
         }
+        */
 
     }
     else
@@ -1267,6 +1274,7 @@ void Individual::getAverageOnFullScanning(){
     }
 
     calculateDiscoveryValue();
+    calculateLatencyValue();
     //printIndividual();
 }
 
