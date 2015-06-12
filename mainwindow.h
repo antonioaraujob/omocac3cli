@@ -146,6 +146,12 @@ private:
     bool useSmartIndividual;
 
     /**
+     * @brief Sequence de referencia para crear individuos inteligentes
+     */
+    QString smartIndividualSequence;
+
+
+    /**
      * @brief Tamano de la ventana de la tabla C del espacio de creencias para la mutacion dirigida
      */
     int ctableWindow;

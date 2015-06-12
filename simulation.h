@@ -411,6 +411,14 @@ public:
      * @param resultsDirectory directorio de resultados
      */
     void reportCTableHistory(QString resultsDirectory);
+
+
+    /**
+     * @brief Crea un población inicial de individuos a partir de una cadena pseudo optima
+     * @param sequence cadena pseudo optima que sirve para construir individuos
+     * @return población inicial de individuos a partir de una cadena pseudo optima
+     */
+    void createSmartPopulation(QString sequence, double latency);
 };
 
 #endif // SIMULATION_H

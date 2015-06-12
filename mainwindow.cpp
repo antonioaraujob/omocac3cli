@@ -142,6 +142,8 @@ MainWindow::MainWindow()
 
     useSmartIndividual = settings.value("usarIndividuosInteligentes").toBool();
 
+    smartIndividualSequence = settings.value("cadenaIndividuoInteligente").toString();
+
     ctableWindow = settings.value("tamanoDeVentanaCTable").toInt();
 
     indexToSortCTable = settings.value("indiceParaOrdenarTablaC").toInt();

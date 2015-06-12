@@ -4,6 +4,9 @@
 //#include <QMessageBox>
 #include <QTextStream>
 
+#include <random>
+#include <chrono>
+
 /**
  * @brief Funcion de comparacion de individuos con respecto al valor de desempeno de descubrimiento
  * @param p1 Individuo 1 a comparar
@@ -152,6 +155,11 @@ void Simulation::initializePopulation()
 
 void Simulation::initializeSmartPopulation()
 {
+
+
+    //createSmartPopulation()
+
+
     Individual * individuo;
 /*
     // inicializacion de la mita de la poblacion con condiciones inciales
@@ -1131,5 +1139,66 @@ void Simulation::printList(QList<Individual*> list)
 void Simulation::reportCTableHistory(QString resultsDirectory)
 {
     ctable->reportCTableHistory(resultsDirectory);
+}
+
+
+void Simulation::createSmartPopulation(QString sequence, double latency)
+{
+    QStringList parameters = sequence.split(",");
+
+
+    Individual * individual;
+
+
+    std::default_random_engine generator;
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    generator.seed(seed);
+    std::normal_distribution<double>  minChannelTimeDistribution(0, stdDeviationMinChannelTime);
+
+    std::normal_distribution<double>  maxChannelTimeDistribution(0, stdDeviationMaxChannelTime);
+
+
+    double min = 0;
+    double max = 0;
+
+    QString aux;
+
+    for (int j = 0; j < populationSize; j++)
+    {
+        individual = new Individual(true, sequence);
+
+        // iterar por cada canal del individuo
+        for (int i = 0; i < individual->getIndividualSize(); i++)
+        {
+            // canal
+            aux = parameters.at((i*4));
+            individual->setParameter((i*4), aux.toDouble());
+
+            // min
+            aux = parameters.at((i*4+1));
+            min = aux.toDouble() + minChannelTimeDistribution(generator);
+
+            // max
+            aux = parameters.at((i*4+2));
+            max = aux.toDouble() + maxChannelTimeDistribution(generator);
+
+
+            // chequear que la latencia no sea mayor a la asignada para el canal
+
+            // aps
+            aux = parameters.at((i*4+3));
+            individual->setParameter((i*4+3), aux.toDouble());
+
+            // asignar min
+            individual->setParameter((i*4+1), min);
+
+            // asignar max
+            individual->setParameter((i*4+2), max);
+
+        }
+
+        individual->getAverageOnFullScanning();
+        populationList.append(individual);
+    }
 }
 
