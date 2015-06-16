@@ -204,7 +204,8 @@ void MainWindow::executeAlgorithm()
                                 mutationProbability,
                                 individualSize,
                                 ctableWindow,
-                                indexToSortCTable);
+                                indexToSortCTable,
+                                smartIndividualSequence);
 
     qsrand((uint)QTime::currentTime().msec());
 

@@ -162,6 +162,11 @@ private:
      */
     int indexToSortCTable;
 
+    /**
+     * @brief Cadena inicial para crear individuos con condiciones iniciales
+     */
+    QString initialSequence;
+
 public:
 
     /**
@@ -182,11 +187,12 @@ public:
      * @param indSize tamano del individuo en la simulacion
      * @param ctableWindow tamano de la ventana de la tabla C del espacio de creencias
      * @param indexToSortCTable indice usado para ordenar la tabla C
+     * @param initSequence cadena con condiciones iniciales para generar individuos inteligentes
      *
      */
     Simulation(int population, int extFileSize, int generations, int subintervalsGrid, int genNormative,
                int matches, int stdDev, int stdDevMin, int stdDevMax, bool dMutation, double dMutationProbability,
-               int indSize, int ctableWindow, int indToSortCTable);
+               int indSize, int ctableWindow, int indToSortCTable, QString initSequence);
 
     /**
      * @brief Destructor de la clase
@@ -418,7 +424,7 @@ public:
      * @param sequence cadena pseudo optima que sirve para construir individuos
      * @return población inicial de individuos a partir de una cadena pseudo optima
      */
-    void createSmartPopulation(QString sequence, double latency);
+    void createSmartPopulation();
 };
 
 #endif // SIMULATION_H

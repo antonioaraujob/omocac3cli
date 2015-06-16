@@ -3,6 +3,7 @@
 #include <QFile>
 //#include <QMessageBox>
 #include <QTextStream>
+#include <QStringList>
 
 #include <random>
 #include <chrono>
@@ -49,7 +50,7 @@ int Simulation::individualIdCounter = 0;
 
 Simulation::Simulation(int population, int extFileSize, int generations, int subintervalsGrid, int genNormative,
                        int matches, int stdDev, int stdDevMin, int stdDevMax, bool dMutation, double dMutationProbability,
-                       int indSize, int ctableWindow, int indToSortCTable)
+                       int indSize, int ctableWindow, int indToSortCTable, QString initSequence)
 {
     populationSize = population;
 
@@ -88,6 +89,8 @@ Simulation::Simulation(int population, int extFileSize, int generations, int sub
     ctable = new CTable(individualSize, ctableWindow, indToSortCTable);
 
     indexToSortCTable = indToSortCTable;
+
+    initialSequence = initSequence;
 
     qDebug("Simulation:");
     qDebug("    tamano de la poblacion: %d", populationSize);
@@ -157,7 +160,9 @@ void Simulation::initializeSmartPopulation()
 {
 
 
-    //createSmartPopulation()
+    createSmartPopulation();
+    qDebug("tamano de la poblacion: %d",populationList.count());
+    return;
 
 
     Individual * individuo;
@@ -1142,10 +1147,11 @@ void Simulation::reportCTableHistory(QString resultsDirectory)
 }
 
 
-void Simulation::createSmartPopulation(QString sequence, double latency)
+void Simulation::createSmartPopulation()
 {
-    QStringList parameters = sequence.split(",");
 
+    QStringList parameters;
+    parameters = initialSequence.split(",");
 
     Individual * individual;
 
@@ -1160,34 +1166,52 @@ void Simulation::createSmartPopulation(QString sequence, double latency)
 
     double min = 0;
     double max = 0;
+    double random = 0;
 
     QString aux;
 
     for (int j = 0; j < populationSize; j++)
     {
-        individual = new Individual(true, sequence);
+        individual = new Individual(true, initialSequence);
 
         // iterar por cada canal del individuo
         for (int i = 0; i < individual->getIndividualSize(); i++)
         {
             // canal
-            aux = parameters.at((i*4));
-            individual->setParameter((i*4), aux.toDouble());
+            aux = parameters.at((i*3));
+            individual->setParameter((i*3), aux.toDouble());
 
             // min
-            aux = parameters.at((i*4+1));
-            min = aux.toDouble() + minChannelTimeDistribution(generator);
+            aux = parameters.at((i*3+1));
+            random = qRound(minChannelTimeDistribution(generator));
+            min = aux.toDouble() + random;
+
+            if (min < 5)
+            {
+                while(min < 5)
+                {
+                    min = aux.toDouble() + qRound(minChannelTimeDistribution(generator));
+                }
+            }
 
             // max
-            aux = parameters.at((i*4+2));
-            max = aux.toDouble() + maxChannelTimeDistribution(generator);
+            aux = parameters.at((i*3+2));
+            random = qRound(maxChannelTimeDistribution(generator));
+            max = aux.toDouble() + random;
 
+            if (max < 1)
+            {
+                while(max < 1)
+                {
+                    max = aux.toDouble() + qRound(maxChannelTimeDistribution(generator));
+                }
+            }
 
             // chequear que la latencia no sea mayor a la asignada para el canal
 
-            // aps
-            aux = parameters.at((i*4+3));
-            individual->setParameter((i*4+3), aux.toDouble());
+            // aps se deja como construyo el individuo arriba y abajo se hara el scanning 30 veces
+            //aux = parameters.at((i*4+3));
+            //individual->setParameter((i*4+3), aux.toDouble());
 
             // asignar min
             individual->setParameter((i*4+1), min);
