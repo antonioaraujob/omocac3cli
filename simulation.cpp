@@ -1179,7 +1179,7 @@ void Simulation::createSmartPopulation()
         {
             // canal
             aux = parameters.at((i*3));
-            individual->setParameter((i*3), aux.toDouble());
+            individual->setParameter((i*4), aux.toDouble());
 
             // min
             aux = parameters.at((i*3+1));
