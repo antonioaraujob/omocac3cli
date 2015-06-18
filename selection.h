@@ -105,6 +105,25 @@ public:
     void makeTournamentsWithNewRules(int individualIndex, Individual * individual, QList<Individual *> adversaryList,
                          NormativeGrid *nGrid);
 
+
+    /**
+     * @brief Ejecuta el proceso de torneo entre el individuo y los adversarios de la lista
+     * de adversario de acuerdo a las siguientes reglas:
+     *
+     * Si individual domina a adversary
+     *      gana individual
+     * en caso contrario
+     *      gana adversario
+     *
+     * si
+     *
+     *
+     * @param individual individuo que se enfrentara a los adversarios
+     * @param adversaryList lista de adversarios
+     */
+    void makeTournamentsWithNewRules(Individual * individual, QList<Individual *> adversaryList);
+
+
     /**
      * Retorna si el individuo xj domina al individuo xi
      * @param xj Individuo 1

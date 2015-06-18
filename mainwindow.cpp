@@ -1777,7 +1777,7 @@ void MainWindow::generateAPResultsOfOriginalMutation()
 }
 
 
-QList<double> MainWindow::processLine(QString line)
+QList<double> MainWindow::processLine(QString line, bool individualBase)
 {
     //qDebug("MainWindow::processLine(QString line)");
 
@@ -1787,11 +1787,39 @@ QList<double> MainWindow::processLine(QString line)
 
     for (int i=0; i<individualSize; i++)
     {
-        newList.append(tmpList.at(i*4));
-        newList.append(tmpList.at(i*4+1));
-        newList.append(tmpList.at(i*4+2));
+        if (individualBase)
+        {
+            newList.append(tmpList.at(i*3));
+            newList.append(tmpList.at(i*3+1));
+            newList.append(tmpList.at(i*3+2));
+        }
+        else
+        {
+            newList.append(tmpList.at(i*4));
+            newList.append(tmpList.at(i*4+1));
+            newList.append(tmpList.at(i*4+2));
+        }
+
+
     }
-    QString latency = tmpList.at(individualSize*4+1);
+
+    QString latency;
+
+    if (individualBase)
+    {
+        double auxLatency = 0;
+        for (int i = 0; i<individualSize; i++)
+        {
+            auxLatency = auxLatency + newList.at(i*3+1).toDouble() + newList.at(i*3+2).toDouble();
+        }
+        latency = QString::number(auxLatency);
+    }
+    else
+    {
+         latency = tmpList.at(individualSize*4+1);
+    }
+
+
 
     QString z;
     for (int i=0; i<newList.size(); i++)
@@ -1915,6 +1943,35 @@ void MainWindow::generateAPResultsOfDirectedMutation()
 
     QList<double> sequenceConfidenceInterval;
     QString intervalLine;
+
+    // en el caso de utilizar un individuo inteligente como base para la creación de la poblacion
+    // agregar los datos del individuo en la salida de dataToPlot.txt
+    if (useSmartIndividual)
+    {
+        QString base = smartIndividualSequence;
+        sequenceConfidenceInterval = processLine(base, true);
+
+        intervalLine.append("indBase");
+        intervalLine.append(" ");
+        intervalLine.append(QString::number(sequenceConfidenceInterval.at(0)));
+        intervalLine.append(" ");
+        intervalLine.append(QString::number(sequenceConfidenceInterval.at(1)));
+        intervalLine.append(" ");
+        intervalLine.append(QString::number(sequenceConfidenceInterval.at(2)));
+        intervalLine.append(" ");
+        intervalLine.append(QString::number(sequenceConfidenceInterval.at(3)));
+        intervalLine.append(" ");
+        intervalLine.append(QString::number(sequenceConfidenceInterval.at(3)));
+        intervalLine.append(" ");
+        intervalLine.append(QString::number(sequenceConfidenceInterval.at(3)));
+        intervalLine.append("\n");
+
+        out << intervalLine ;
+        intervalLine.clear();
+        sequenceConfidenceInterval.clear();
+
+    }
+
 
     QTextStream in(&inputFile);
 

@@ -544,7 +544,7 @@ public:
      * @param line cadena a la que se desea calcular el intervalo de confianza
      * @return intervalo de confianza para el numero promedio de APs  en una lista <min, avg, max>
      */
-    QList<double> processLine(QString line);
+    QList<double> processLine(QString line, bool individualBase = false);
 
     /**
      * @brief Calcula la varianza de la muestra

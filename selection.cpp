@@ -95,8 +95,10 @@ void Selection::doSelection(QList<Individual *> population2p, int matches, Norma
         //makeTournaments(i, selectedIndividual, adversaryList, nGrid);
 
         // ejecutar los torneos del invidivuo contra los adversarios y las reglas nuevas
-        makeTournamentsWithNewRules(i, selectedIndividual, adversaryList, nGrid);
+        //makeTournamentsWithNewRules(i, selectedIndividual, adversaryList, nGrid);
 
+        // ejecutar los torneos del invidivuo contra los adversarios y las reglas nuevas
+        makeTournamentsWithNewRules(selectedIndividual, adversaryList);
 
         // incrementar el valor de i
         i++;
@@ -409,6 +411,45 @@ void Selection::makeTournamentsWithNewRules(int individualIndex, Individual * in
 }
 
 
+void Selection::makeTournamentsWithNewRules(Individual * individual, QList<Individual *> adversaryList)
+{
+    Individual * adversary;
+
+    for (int i=0; i<adversaryList.count(); i++)
+    {
+        adversary = adversaryList.at(i);
+
+        qDebug("encuentro entre:");
+        individual->printIndividual();
+        adversary->printIndividual();
+        qDebug(" ");
+
+        // verificar condiciones:
+        //
+        // 1) si un individuo domina a otro gana el individuo no dominado
+        if (individualDominate(individual, adversary))
+        {
+            qDebug("   individual domina a adversary");
+            individual->incrementWonMatchesCounter();
+        }
+        else if (individualDominate(adversary, individual))
+        {
+            qDebug("   adversary domina a individual");
+            adversary->incrementWonMatchesCounter();
+        }
+        else // los individuos son comparables, o sus valores de funcion objetivo son iguales
+        {
+            // latencia de individual <= adversary : gana A
+            if (individual->getPerformanceLatency() <= adversary->getPerformanceLatency())
+            {
+                individual->incrementWonMatchesCounter();
+            }else // latencia de individual > adversary : gana B
+            {
+                adversary->incrementWonMatchesCounter();
+            }
+        }
+    } // fin del for de recorrido de la lista de adversarios
+}
 
 
 bool Selection::individualDominate(Individual * xj, Individual * xi)

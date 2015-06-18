@@ -726,17 +726,17 @@ void Individual::calculateDiscoveryValue()
 
     if (getEmulateScanning())
     {
-        /*
+
         // suma de los valores de AP por canal
         for (int i=0; i<individualSize; i++)
         {
             discovery = discovery + parametersList.at((i*4)+3);
         }
-        */
+
 
         // ********************************************************************************************************
         // codigo para probar funcion objetivo = ((Suma AP_i)/minchannel_i)*X + ((Suma AP_i)/maxchannel_i)*Y
-
+/*
         if (MainWindow::getIndexToSortCTable() == 0 )
         {
             for (int i=0; i<individualSize; i++)
@@ -757,7 +757,7 @@ void Individual::calculateDiscoveryValue()
                 discovery += ( (parametersList.at((i*4)+3))/(parametersList.at((i*4)+1)) )*0.60 + ( (parametersList.at((i*4)+3))/(parametersList.at((i*4)+2)) )*0.40;
             }
         }
-
+*/
         // ********************************************************************************************************
     }
     else
