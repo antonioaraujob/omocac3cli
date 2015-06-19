@@ -1683,6 +1683,35 @@ void MainWindow::generateAPResultsOfOriginalMutation()
     QList<double> sequenceConfidenceInterval;
     QString intervalLine;
 
+    // en el caso de utilizar un individuo inteligente como base para la creación de la poblacion
+    // agregar los datos del individuo en la salida de dataToPlot.txt
+    if (useSmartIndividual)
+    {
+        QString base = smartIndividualSequence;
+        sequenceConfidenceInterval = processLine(base, true);
+
+        intervalLine.append("indBase");
+        intervalLine.append(" ");
+        intervalLine.append(QString::number(sequenceConfidenceInterval.at(0)));
+        intervalLine.append(" ");
+        intervalLine.append(QString::number(sequenceConfidenceInterval.at(1)));
+        intervalLine.append(" ");
+        intervalLine.append(QString::number(sequenceConfidenceInterval.at(2)));
+        intervalLine.append(" ");
+        intervalLine.append(QString::number(sequenceConfidenceInterval.at(3)));
+        intervalLine.append(" ");
+        intervalLine.append(QString::number(sequenceConfidenceInterval.at(3)));
+        intervalLine.append(" ");
+        intervalLine.append(QString::number(sequenceConfidenceInterval.at(3)));
+        intervalLine.append("\n");
+
+        out << intervalLine ;
+        intervalLine.clear();
+        sequenceConfidenceInterval.clear();
+
+    }
+
+
     QTextStream in(&inputFile);
 
     // contador de cadenas resultantes

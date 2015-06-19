@@ -786,6 +786,42 @@ echo "
 " >> salida.tex
 
 
+# ******************************************************************************
+# agregar la tabla 5 correspondiente a los intervalos de confianza de 95% de 
+# APs encontrados
+
+echo "
+\begin{table}[h]
+\centering
+\caption{95 Confidence Intervals}
+
+\definecolor{light-gray}{gray}{0.95}
+\rowcolors{1}{white}{light-gray}
+
+\begin{tabularx}{\textwidth}{|X|X|X|X|X|}
+
+\hline
+\textbf{Cadena} & \textbf{APs} & \textbf{Min} & \textbf{Max} & \textbf{Latency (ms)} \\\\
+\hline
+" >> salida.tex
+
+
+# procesar cada linea de secuencia de canales del archivo dataToPlot.txt
+awk ' 
+BEGIN { 
+	FS=" "; gen1="";gen2="";gen3="";gen4="";gen5="";
+}  
+{ 
+	print $1" & "$2" & "$3" & "$4" & "$5"\134\134";
+}' dataToPlot.txt >> salida.tex
+
+# finalizar la tabla de latex
+echo "
+\hline
+\end{tabularx}
+\end{table}
+" >> salida.tex
+
 
 
 
