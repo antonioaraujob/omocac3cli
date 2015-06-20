@@ -2270,93 +2270,93 @@ void MainWindow::generateMutatedResultsTable()
     if (individualSize == 1)
     {
         // copiar el archivo processResultsWithoutArrowMutatedSize1.sh al directorio de resultados
-        program = "cp "+ home + "/processResultsWithoutArrowMutatedSize1.sh "+ resultsDirectory ;
+        program = "cp "+ home + "/processResultsWithoutArrowMutatedSize1-v2.sh "+ resultsDirectory ;
         system(qPrintable(program));
 
-        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowMutatedSize1.sh";
+        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowMutatedSize1-v2.sh";
         system(qPrintable(program));
 
     }else if (individualSize == 2)
     {
         // copiar el archivo processResultsWithoutArrowMutatedSize2.sh al directorio de resultados
-        program = "cp "+ home + "/processResultsWithoutArrowMutatedSize2.sh "+ resultsDirectory ;
+        program = "cp "+ home + "/processResultsWithoutArrowMutatedSize2-v2.sh "+ resultsDirectory ;
         system(qPrintable(program));
 
-        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowMutatedSize2.sh";
+        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowMutatedSize2-v2.sh";
         system(qPrintable(program));
 
     } else if (individualSize == 3)
     {
         // copiar el archivo processResultsWithoutArrowMutatedSize3.sh al directorio de resultados
-        program = "cp "+ home + "/processResultsWithoutArrowMutatedSize3.sh "+ resultsDirectory ;
+        program = "cp "+ home + "/processResultsWithoutArrowMutatedSize3-v2.sh "+ resultsDirectory ;
         system(qPrintable(program));
 
-        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowMutatedSize3.sh";
+        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowMutatedSize3-v2.sh";
         system(qPrintable(program));
 
     } else if (individualSize == 4)
     {
         // copiar el archivo processResultsWithoutArrowMutatedSize4.sh al directorio de resultados
-        program = "cp "+ home + "/processResultsWithoutArrowMutatedSize4.sh "+ resultsDirectory ;
+        program = "cp "+ home + "/processResultsWithoutArrowMutatedSize4-v2.sh "+ resultsDirectory ;
         system(qPrintable(program));
 
-        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowMutatedSize4.sh";
+        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowMutatedSize4-v2.sh";
         system(qPrintable(program));
     } else if (individualSize == 5)
     {
         // copiar el archivo processResultsWithoutArrowMutatedSize5.sh al directorio de resultados
-        program = "cp "+ home + "/processResultsWithoutArrowMutatedSize5.sh "+ resultsDirectory ;
+        program = "cp "+ home + "/processResultsWithoutArrowMutatedSize5-v2.sh "+ resultsDirectory ;
         system(qPrintable(program));
 
-        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowMutatedSize5.sh";
+        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowMutatedSize5-v2.sh";
         system(qPrintable(program));
     } else if (individualSize == 6)
     {
         // copiar el archivo processResultsWithoutArrowMutatedSize6.sh al directorio de resultados
-        program = "cp "+ home + "/processResultsWithoutArrowMutatedSize6.sh "+ resultsDirectory ;
+        program = "cp "+ home + "/processResultsWithoutArrowMutatedSize6-v2.sh "+ resultsDirectory ;
         system(qPrintable(program));
 
-        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowMutatedSize6.sh";
+        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowMutatedSize6-v2.sh";
         system(qPrintable(program));
     } else if (individualSize == 7)
     {
         // copiar el archivo processResultsWithoutArrowMutatedSize7.sh al directorio de resultados
-        program = "cp "+ home + "/processResultsWithoutArrowMutatedSize7.sh "+ resultsDirectory ;
+        program = "cp "+ home + "/processResultsWithoutArrowMutatedSize7-v2.sh "+ resultsDirectory ;
         system(qPrintable(program));
 
-        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowMutatedSize7.sh";
+        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowMutatedSize7-v2.sh";
         system(qPrintable(program));
     } else if (individualSize == 8)
     {
         // copiar el archivo processResultsWithoutArrowMutatedSize8.sh al directorio de resultados
-        program = "cp "+ home + "/processResultsWithoutArrowMutatedSize8.sh "+ resultsDirectory ;
+        program = "cp "+ home + "/processResultsWithoutArrowMutatedSize8-v2.sh "+ resultsDirectory ;
         system(qPrintable(program));
 
-        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowMutatedSize8.sh";
+        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowMutatedSize8-v2.sh";
         system(qPrintable(program));
     } else if (individualSize == 9)
     {
         // copiar el archivo processResultsWithoutArrowMutatedSize9.sh al directorio de resultados
-        program = "cp "+ home + "/processResultsWithoutArrowMutatedSize9.sh "+ resultsDirectory ;
+        program = "cp "+ home + "/processResultsWithoutArrowMutatedSize9-v2.sh "+ resultsDirectory ;
         system(qPrintable(program));
 
-        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowMutatedSize9.sh";
+        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowMutatedSize9-v2.sh";
         system(qPrintable(program));
     } else if (individualSize == 10)
     {
         // copiar el archivo processResultsWithoutArrowMutatedSize10.sh al directorio de resultados
-        program = "cp "+ home + "/processResultsWithoutArrowMutatedSize10.sh "+ resultsDirectory ;
+        program = "cp "+ home + "/processResultsWithoutArrowMutatedSize10-v2.sh "+ resultsDirectory ;
         system(qPrintable(program));
 
-        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowMutatedSize10.sh";
+        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowMutatedSize10-v2.sh";
         system(qPrintable(program));
     }else if (individualSize == 11)
     {
         // copiar el archivo processResultsWithoutArrowMutatedSize11.sh al directorio de resultados
-        program = "cp "+ home + "/processResultsWithoutArrowMutatedSize11.sh "+ resultsDirectory ;
+        program = "cp "+ home + "/processResultsWithoutArrowMutatedSize11-v2.sh "+ resultsDirectory ;
         system(qPrintable(program));
 
-        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowMutatedSize11.sh";
+        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowMutatedSize11-v2.sh";
         system(qPrintable(program));
     }
     else
@@ -2379,93 +2379,93 @@ void MainWindow::generateResultsTable()
     if (individualSize == 1)
     {
         // copiar el archivo processResultsWithoutArrowSize1.sh al directorio de resultados
-        program = "cp "+ home + "/processResultsWithoutArrowSize1.sh "+ resultsDirectory ;
+        program = "cp "+ home + "/processResultsWithoutArrowSize1-v2.sh "+ resultsDirectory ;
         system(qPrintable(program));
 
-        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowSize1.sh";
+        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowSize1-v2.sh";
         system(qPrintable(program));
 
     }else if (individualSize == 2)
     {
         // copiar el archivo processResultsWithoutArrowSize2.sh al directorio de resultados
-        program = "cp "+ home + "/processResultsWithoutArrowSize2.sh "+ resultsDirectory ;
+        program = "cp "+ home + "/processResultsWithoutArrowSize2-v2.sh "+ resultsDirectory ;
         system(qPrintable(program));
 
-        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowSize2.sh";
+        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowSize2-v2.sh";
         system(qPrintable(program));
 
     } else if (individualSize == 3)
     {
         // copiar el archivo processResultsWithoutArrowSize3.sh al directorio de resultados
-        program = "cp "+ home + "/processResultsWithoutArrowSize3.sh "+ resultsDirectory ;
+        program = "cp "+ home + "/processResultsWithoutArrowSize3-v2.sh "+ resultsDirectory ;
         system(qPrintable(program));
 
-        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowSize3.sh";
+        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowSize3-v2.sh";
         system(qPrintable(program));
 
     } else if (individualSize == 4)
     {
         // copiar el archivo processResultsWithoutArrowSize4.sh al directorio de resultados
-        program = "cp "+ home + "/processResultsWithoutArrowSize4.sh "+ resultsDirectory ;
+        program = "cp "+ home + "/processResultsWithoutArrowSize4-v2.sh "+ resultsDirectory ;
         system(qPrintable(program));
 
-        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowSize4.sh";
+        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowSize4-v2.sh";
         system(qPrintable(program));
     } else if (individualSize == 5)
     {
         // copiar el archivo processResultsWithoutArrowSize5.sh al directorio de resultados
-        program = "cp "+ home + "/processResultsWithoutArrowSize5.sh "+ resultsDirectory ;
+        program = "cp "+ home + "/processResultsWithoutArrowSize5-v2.sh "+ resultsDirectory ;
         system(qPrintable(program));
 
-        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowSize5.sh";
+        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowSize5-v2.sh";
         system(qPrintable(program));
     } else if (individualSize == 6)
     {
         // copiar el archivo processResultsWithoutArrowSize6.sh al directorio de resultados
-        program = "cp "+ home + "/processResultsWithoutArrowSize6.sh "+ resultsDirectory ;
+        program = "cp "+ home + "/processResultsWithoutArrowSize6-v2.sh "+ resultsDirectory ;
         system(qPrintable(program));
 
-        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowSize6.sh";
+        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowSize6-v2.sh";
         system(qPrintable(program));
     } else if (individualSize == 7)
     {
         // copiar el archivo processResultsWithoutArrowSize7.sh al directorio de resultados
-        program = "cp "+ home + "/processResultsWithoutArrowSize7.sh "+ resultsDirectory ;
+        program = "cp "+ home + "/processResultsWithoutArrowSize7-v2.sh "+ resultsDirectory ;
         system(qPrintable(program));
 
-        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowSize7.sh";
+        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowSize7-v2.sh";
         system(qPrintable(program));
     } else if (individualSize == 8)
     {
         // copiar el archivo processResultsWithoutArrowSize8.sh al directorio de resultados
-        program = "cp "+ home + "/processResultsWithoutArrowSize8.sh "+ resultsDirectory ;
+        program = "cp "+ home + "/processResultsWithoutArrowSize8-v2.sh "+ resultsDirectory ;
         system(qPrintable(program));
 
-        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowSize8.sh";
+        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowSize8-v2.sh";
         system(qPrintable(program));
     } else if (individualSize == 9)
     {
         // copiar el archivo processResultsWithoutArrowSize9.sh al directorio de resultados
-        program = "cp "+ home + "/processResultsWithoutArrowSize9.sh "+ resultsDirectory ;
+        program = "cp "+ home + "/processResultsWithoutArrowSize9-v2.sh "+ resultsDirectory ;
         system(qPrintable(program));
 
-        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowSize9.sh";
+        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowSize9-v2.sh";
         system(qPrintable(program));
     } else if (individualSize == 10)
     {
         // copiar el archivo processResultsWithoutArrowSize10.sh al directorio de resultados
-        program = "cp "+ home + "/processResultsWithoutArrowSize10.sh "+ resultsDirectory ;
+        program = "cp "+ home + "/processResultsWithoutArrowSize10-v2.sh "+ resultsDirectory ;
         system(qPrintable(program));
 
-        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowSize10.sh";
+        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowSize10-v2.sh";
         system(qPrintable(program));
     }else if (individualSize == 11)
     {
         // copiar el archivo processResultsWithoutArrowSize11.sh al directorio de resultados
-        program = "cp "+ home + "/processResultsWithoutArrowSize11.sh "+ resultsDirectory ;
+        program = "cp "+ home + "/processResultsWithoutArrowSize11-v2.sh "+ resultsDirectory ;
         system(qPrintable(program));
 
-        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowSize11.sh";
+        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowSize11-v2.sh";
         system(qPrintable(program));
     }
     else
