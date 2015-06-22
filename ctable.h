@@ -61,6 +61,14 @@ public:
      */
     void addSuperIndividual(QList<CTableGen *> superIndividualGenList, int indexToSort);
 
+
+    /**
+     * @brief Agrega el individuo pasado como argumento a CTable como superindividuo
+     * @param individual individuo a considerar como superindividuo
+     */
+    void addSuperIndividual(Individual * individual);
+
+
     /**
      * @brief Retorna lista de los genes de la ventana de la tabla C del espacio de creencias
      * @return lista de los genes de la ventana de la tabla C del espacio de creencias
@@ -88,8 +96,9 @@ public:
      *
      * Se agrega el super individuo actual a la lista de historicos y se limpia la lista genList
      * de los genes para esperar un nuevo super individuo
+     * @param recordCurrent verdadero si se debe registrar el superindividuo en el historico
      */
-    void clearCTable();
+    void clearCTable(bool recordCurrent=true);
 
     /**
      * @brief Genera un archivo con los individuos historicos de la CTable a lo largo de la
@@ -98,6 +107,14 @@ public:
      * @param resultsDirectory directorio de resultados
      */
     void reportCTableHistory(QString resultsDirectory);
+
+    /**
+     * @brief Retorna un individuo creado a partir de la mutación del individuo pasado como argumento
+     *
+     * @param father individuo a mutar
+     * @return un individuo creado a partir de la mutación del individuo pasado como argumento
+     */
+    Individual * getNewIndividualFromCTable(Individual *father);
 
 };
 

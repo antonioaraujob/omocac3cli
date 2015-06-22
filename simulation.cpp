@@ -159,10 +159,24 @@ void Simulation::initializePopulation()
 void Simulation::initializeSmartPopulation()
 {
 
-
+    /*
+    // inicializacion de la poblacion  a partir de la cadena inteligente parametro del algoritmo y el mecanismo
+    // aleatorio para asignacion de parametros
     createSmartPopulation();
+
     qDebug("tamano de la poblacion: %d",populationList.count());
     return;
+    */
+
+
+    // inicializacion de la poblacion a partir de la cadena inteligente parametro del algortimo y el mecanismo de
+    // mutación de CTable
+    createSmartPopulationWithCTable();
+
+    qDebug("tamano de la poblacion: %d",populationList.count());
+    return;
+
+
 
 
     Individual * individuo;
@@ -1226,3 +1240,40 @@ void Simulation::createSmartPopulation()
     }
 }
 
+
+
+void Simulation::createSmartPopulationWithCTable()
+{
+    Individual * individuo;
+    // agregar 10 individuos identicos a la cadena de referencia de iOS
+    for (int i=0; i<10; i++)
+    {
+        //individuo = new Individual(true, "1,39,0,2,39,0,3,39,0,4,39,0,5,39,0,6,39,0,7,39,0,8,39,0,9,39,0,10,39,0,11,39,0");
+        individuo = new Individual(true, initialSequence);
+        individuo->getAverageOnFullScanning();
+        populationList.append(individuo);
+    }
+
+
+    // agregar 10 individuos creados a partir de la cadena de referencia con el proceso de CTable
+    Individual * superIndividual = new Individual(true, initialSequence);
+    superIndividual->getAverageOnFullScanning();
+
+    ctable->addSuperIndividual(superIndividual);
+
+    Individual * father = new Individual();
+    father->getAverageOnFullScanning();
+
+    Individual * offspring;
+
+    for (int i=0; i<10; i++)
+    {
+
+        offspring = ctable->getNewIndividualFromCTable(father);
+        offspring->getAverageOnFullScanning();
+
+        populationList.append(offspring);
+    }
+    ctable->clearCTable(false);
+
+}

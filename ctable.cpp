@@ -84,6 +84,32 @@ void CTable::addSuperIndividual(QList<CTableGen *> superIndividualGenList, int i
     }
 }
 
+void CTable::addSuperIndividual(Individual * individual)
+{
+    int channel = 0;
+    double min = 0;
+    double max = 0;
+    double aps = 0;
+    double indexA = 0;
+    double indexB = 0;
+    double indexC = 0;
+    CTableGen * gen;
+
+    for (int i=0; i<individual->getIndividualSize(); i++)
+    {
+        channel = individual->getParameter(i*4);
+        min = individual->getParameter(i*4+1);
+        max = individual->getParameter(i*4+2);
+        aps = individual->getParameter(i*4+3);
+        indexA = individual->getParameter(i*4+3);
+        indexB = individual->getParameter(i*4+3);
+        indexC = individual->getParameter(i*4+3);
+        gen = new CTableGen(channel, min, max, aps,indexA, indexB, indexC);
+        genList.append(gen);
+    }
+}
+
+
 QList<CTableGen *> CTable::getWindowGenes()
 {
     QList<CTableGen *> windowGenesList;
@@ -135,21 +161,24 @@ int CTable::searchChannelInList(int ch, QList<CTableGen *> list)
     //Q_ASSERT_X(true, "CTable::searchChannelInList", "Se esta buscando un canal en la lista de genes que no existe");
 }
 
-void CTable::clearCTable()
+void CTable::clearCTable(bool recordCurrent)
 {
     // lista temporal de genes
     QList<CTableGen *> tmpList;
 
     CTableGen * gen;
 
-    // agregar los genes del super individuo actual a la lista tmpList
-    for (int i=0; i<genList.size(); i++){
-        gen = new CTableGen(*genList.at(i));
-        tmpList.append(gen);
-    }
+    if (recordCurrent)
+    {
+        // agregar los genes del super individuo actual a la lista tmpList
+        for (int i=0; i<genList.size(); i++){
+            gen = new CTableGen(*genList.at(i));
+            tmpList.append(gen);
+        }
 
-    // agregar la lista tmpList al registro historico
-    historicSuperIndividualList.append(tmpList);
+        // agregar la lista tmpList al registro historico
+        historicSuperIndividualList.append(tmpList);
+    }
 
     // limpiar la lista del super individuo actual
     genList.clear();
@@ -206,3 +235,55 @@ void CTable::reportCTableHistory(QString resultsDirectory)
 
 }
 
+Individual * CTable::getNewIndividualFromCTable(Individual * father)
+{
+
+    QList<CTableGen *> windowGenesList = getWindowGenes();
+    Individual * offspring = new Individual(*father);
+
+    QList<CTableGen*> convertedIndividual = convertIndividualToCTableGen(offspring);
+
+    CTableGen * gen;
+    CTableGen * tmpGen;
+
+    int index = 0;
+
+    for (int i=0; i< windowGenesList.size(); i++)
+    {
+        gen = windowGenesList.at(i);
+
+        // gen temporal del hijo
+        tmpGen = convertedIndividual.at(i);
+
+        // indice del canal en el cual se debe colocar el nuevo canal
+        index = searchChannelInList(gen->getChannel(), convertedIndividual);
+
+        // solo reemplazar
+        if (index == -1)
+        {
+            convertedIndividual.replace(i, gen);
+        }else{ // permutar
+            convertedIndividual.replace(i,gen);
+            convertedIndividual.replace(index, tmpGen);
+        }
+        index = 0;
+    }
+
+    // en este punto ya convertedIndividual esta completamente mutado, ahora devolver el cambio
+    for (int i=0; i<offspring->getIndividualSize(); i++)
+    {
+        offspring->setParameter((i*4), convertedIndividual.at(i)->getChannel());
+        offspring->setParameter(((i*4)+1), convertedIndividual.at(i)->getMinChannelTime());
+        offspring->setParameter(((i*4)+2), convertedIndividual.at(i)->getMaxChannelTime());
+        offspring->setParameter(((i*4)+3), convertedIndividual.at(i)->getAPs());
+    }
+    qDebug("revisa");
+
+    offspring->getAverageOnFullScanning();
+
+    offspring->calculateDiscoveryValue();
+    offspring->calculateLatencyValue();
+
+    // retornar el offspring
+    return offspring;
+}

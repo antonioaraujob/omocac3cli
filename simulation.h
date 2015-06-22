@@ -425,6 +425,14 @@ public:
      * @return población inicial de individuos a partir de una cadena pseudo optima
      */
     void createSmartPopulation();
+
+    /**
+     * @brief Crea un población inicial de individuos a partir de una cadena pseudo optima
+     *
+     * Los individuos se crean a partir de una cadena tomada como parametro del algoritmo
+     *
+     */
+    void createSmartPopulationWithCTable();
 };
 
 #endif // SIMULATION_H
