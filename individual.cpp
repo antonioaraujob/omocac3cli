@@ -1284,3 +1284,14 @@ double Individual::getBestIndexFoValue(int channelIndex)
     return getParameter(channelIndex);
 }
 
+
+double Individual::getAPsForMin(int channel, double min, double max)
+{
+    return 0;
+}
+
+
+double Individual::getAPsForMax(int channel, double min, double max)
+{
+    return 0;
+}

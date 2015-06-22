@@ -35,7 +35,8 @@ SOURCES += main.cpp \
     cell.cpp \
     gen.cpp \
     ctable.cpp \
-    ctablegen.cpp
+    ctablegen.cpp \
+    emulator.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -50,4 +51,5 @@ HEADERS += \
     cell.h \
     gen.h \
     ctable.h \
-    ctablegen.h
+    ctablegen.h \
+    emulator.h

@@ -11,6 +11,7 @@
 
 
 
+
 /**
  * @brief Funcion de comparacion de individuos con respecto al valor de desempeno de latencia
  * @param p1 Individuo 1 a comparar
@@ -170,6 +171,14 @@ MainWindow::MainWindow()
 
     Q_ASSERT_X(ctableWindow <= individualSize, "MainWindow::MainWindow()",
                "No se puede iniciar la simulacion con tamano de ventana de CTable mayor que el tamano del individuo.");
+
+    topologyEmulator = new Emulator();
+    double aps = 0;
+    for (int i=1; i<12; i++)
+    {
+        aps = topologyEmulator->getAPs(11, 15, 135);
+    }
+
 
 }
 
@@ -2474,3 +2483,16 @@ void MainWindow::generateResultsTable()
     }
 
 }
+
+
+double MainWindow::askTopology(int channel, double min, double max)
+{
+    double aps = 0;
+    for (int i=1; i<30; i++)
+    {
+        aps = aps + topologyEmulator->getAPs(channel, min, max);
+    }
+    double avgAPs = aps/30;
+    return avgAPs;
+}
+

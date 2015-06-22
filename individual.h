@@ -367,6 +367,12 @@ public:
      * @return el valor FO del canal pasado como argumento
      */
     double getBestIndexFoValue(int channelIndex);
+
+
+    double getAPsForMin(int channel, double min, double max);
+
+
+    double getAPsForMax(int channel, double min, double max);
 };
 
 #endif // INDIVIDUAL_H

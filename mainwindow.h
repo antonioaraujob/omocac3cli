@@ -5,8 +5,8 @@
 //#include "qcustomplot.h"
 
 #include "gen.h"
-
 #include "scan.h"
+#include "emulator.h"
 
 #include <QSettings>
 
@@ -185,6 +185,11 @@ private:
      * @brief Cadena que especifica el directorio de resultados de la ejecucion del algoritmo
      */
     QString resultsDirectory;
+
+    /**
+     * @brief Emulador de la topologia para consultar APs
+     */
+    Emulator * topologyEmulator;
 
 public:
 
@@ -593,6 +598,10 @@ public:
      * mutacion original de acuerdo al tamano de los individuos
      */
     void generateResultsTable();
+
+
+    double askTopology(int channel, double min, double max);
+
 };
 
 #endif // MAINWINDOW_H
