@@ -373,6 +373,32 @@ public:
 
 
     double getAPsForMax(int channel, double min, double max);
+
+    /**
+     * @brief Retorna el valor de FO del canal pasado como argumento
+     *
+     * La formula utilizada para obtener el valor de la FO en el canal i es la siguiente:
+     *
+     * Fo_i = (AP_descubiertos_con_min)/min + (AP_descubiertos_con_max)/max
+     *
+     * @param channel canal
+     * @param min minchanneltime
+     * @param max maxchanneltime
+     * @return valor de FO del canal pasado como argumento
+     */
+    double getAPsByChannel(int channel, double min, double max);
+
+    /**
+     * @brief Retorna el valor de FO del canal pasado como argumento
+     *
+     * La formula utilizada para obtener el valor de la FO en el canal i es la siguiente:
+     *
+     * Fo_i = (AP_descubiertos_con_min)/min + (AP_descubiertos_con_max)/max
+     *
+     *
+     * @return valor de FO1
+     */
+    double getAPsByAllChannels();
 };
 
 #endif // INDIVIDUAL_H

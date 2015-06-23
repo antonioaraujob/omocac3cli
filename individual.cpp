@@ -727,11 +727,40 @@ void Individual::calculateDiscoveryValue()
     if (getEmulateScanning())
     {
 
+        // ********************************************************************************************************
+        // codigo para probar la suma simple de los APs encontrados
+
+
         // suma de los valores de AP por canal
         for (int i=0; i<individualSize; i++)
         {
             discovery = discovery + parametersList.at((i*4)+3);
         }
+
+        // ********************************************************************************************************
+
+
+        // ********************************************************************************************************
+        // codigo para probar la funcion objetivo:
+        //      Sumatoria_i (AP_descubiertos_con_min)/minchannel_i) + ((AP_descubiertos_con_max)/maxchannel_i)
+
+        //int channel = 0;
+        //double min = 0;
+        //double max = 0;
+
+        // suma de los valores de AP por canal
+        //for (int i=0; i<individualSize; i++)
+        //{
+        //    channel = parametersList.at(i*4);
+        //    min = parametersList.at(i*4+1);
+        //    max = parametersList.at(i*4+2);
+        //    discovery = discovery + getAPsByChannel(channel, min, max);
+        //}
+
+        //discovery = getAPsByAllChannels();
+        //qDebug(qPrintable(QString::number(discovery)));
+
+        // ********************************************************************************************************
 
 
         // ********************************************************************************************************
@@ -780,6 +809,7 @@ void Individual::calculateDiscoveryValue()
         }
     }
 
+    Q_ASSERT_X((discovery >= 0), "Individual::calculateDiscoveryValue()", "valor de descubrimiento < 0");
     performanceDiscovery = discovery;
     //qDebug("performanceDiscovery: ");
 
@@ -1294,4 +1324,123 @@ double Individual::getAPsForMin(int channel, double min, double max)
 double Individual::getAPsForMax(int channel, double min, double max)
 {
     return 0;
+}
+
+double Individual::getAPsByChannel(int channel, double min, double max)
+{
+    // obtener APmin/min + APmax/max
+
+    QString database("test_18.1.db");
+
+    // tipo de experimento para extraer las muestras: full -> full scanning
+    QString experiment("full");
+
+    //Scan scan(database.toStdString(),experiment.toStdString());
+    ScanningCampaing scan(database.toStdString(),experiment.toStdString(), 0);
+    scan.init();
+    scan.prepareIRD();
+
+    // primer termino APmin/min
+    double minAPsum = 0;
+
+    for (int i=0; i<30; i++)
+    {
+        // (ch, min, 0) corresponde a los APs encontrados con minchanneltime
+        minAPsum = minAPsum + scan.getAPs(channel, min, 0);
+    }
+    double APmin = minAPsum/30;
+
+
+
+    // segundo termino APmax/max
+    double maxAPsum = 0;
+
+    for (int i=0; i<30; i++)
+    {
+        // (ch, min, max) corresponde a los APs encontrados con maxchanneltime
+        maxAPsum = maxAPsum + scan.getAPs(channel, min, max);
+    }
+    double APmax = maxAPsum/30;
+
+    double APsByChannel = 0;
+
+    if (APmax < APmin)
+    {
+        APsByChannel = APmin/min;
+    }
+    else
+    {
+        APsByChannel = APmin/min + (APmax-APmin)/max;
+    }
+
+    return APsByChannel;
+}
+
+double Individual::getAPsByAllChannels()
+{
+    double discovery = 0;
+
+    // obtener APmin/min + APmax/max
+
+    QString database("test_18.1.db");
+
+    // tipo de experimento para extraer las muestras: full -> full scanning
+    QString experiment("full");
+
+    //Scan scan(database.toStdString(),experiment.toStdString());
+    ScanningCampaing scan(database.toStdString(),experiment.toStdString(), 0);
+    scan.init();
+    scan.prepareIRD();
+
+    int channel = 0;
+    double min = 0;
+    double max = 0;
+
+    // iterar por cada canal
+    for (int c=0; c<individualSize; c++)
+    {
+        channel = parametersList.at(c*4);
+        min = parametersList.at(c*4+1);
+        max = parametersList.at(c*4+2);
+
+        // primer termino APmin/min
+        double minAPsum = 0;
+
+        for (int i=0; i<30; i++)
+        {
+            // (ch, min, 0) corresponde a los APs encontrados con minchanneltime
+            minAPsum = minAPsum + scan.getAPs(channel, min, 0);
+        }
+        double APmin = minAPsum/30;
+
+        // segundo termino APmax/max
+        double maxAPsum = 0;
+
+        for (int i=0; i<30; i++)
+        {
+            // (ch, min, max) corresponde a los APs encontrados con maxchanneltime
+            maxAPsum = maxAPsum + scan.getAPs(channel, min, max);
+        }
+        double APmax = maxAPsum/30;
+
+        // asignar el valor del numero de APs encontrados al canal
+        setParameter(c*4+3, APmax);
+
+
+        double APsByChannel = 0;
+
+        if (APmax < APmin)
+        {
+            APsByChannel = APmin/min;
+        }
+        else
+        {
+            APsByChannel = APmin/min + (APmax-APmin)/max;
+        }
+
+        discovery = discovery + APsByChannel;
+
+    } // fin de iteracion por cada canal
+
+    return discovery;
 }
