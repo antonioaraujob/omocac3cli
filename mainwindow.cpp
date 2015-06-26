@@ -179,6 +179,8 @@ MainWindow::MainWindow()
         aps = topologyEmulator->getAPs(11, 15, 135);
     }
 
+    QString smart = askTopologyPerformanceSmartIndividual();
+    qDebug(qPrintable(smart));
 
 }
 
@@ -2495,4 +2497,24 @@ double MainWindow::askTopology(int channel, double min, double max)
     double avgAPs = aps/30;
     return avgAPs;
 }
+
+QString MainWindow::askTopologyPerformanceSmartIndividual()
+{
+    QString smartIndividual = smartIndividualSequence;
+
+    QString result;
+
+    Individual * ind;
+    ind = new Individual(true, smartIndividual);
+    ind->getAverageOnFullScanning();
+
+    for (int i=0; i<individualSize; i++)
+    {
+        result = ind->getIndividualAsQString();
+    }
+   return result;
+}
+
+
+
 

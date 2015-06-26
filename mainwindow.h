@@ -602,6 +602,13 @@ public:
 
     double askTopology(int channel, double min, double max);
 
+
+
+    /**
+     * @brief Retorna el número de aps del individuo
+     * @return
+     */
+    QString askTopologyPerformanceSmartIndividual();
 };
 
 #endif // MAINWINDOW_H
