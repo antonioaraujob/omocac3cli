@@ -653,6 +653,18 @@ void MainWindow::executeModificatedAlgorithm()
     // ordenar la lista en orden ascendente de acuerdo a la latencia (F2)
     qSort(myList.begin(), myList.end(), xLessThanLatency);
 
+
+    // agregar el individuo base para mostrarlo en la tabla de APs encontrados
+    Individual * smartInd;
+    if (useSmartIndividual)
+    {
+        smartInd = new Individual(true, smartIndividualSequence);
+        smartInd->getAverageOnFullScanning();
+        myList.insert(0, smartInd);
+    }
+
+
+
     // escribir en un archivo los individuos del frente de pareto encontrado en un archivo
     reportIndividualAsFile(myList, resultsDirectory, "individuosFrenteParetoModificado");
 
@@ -2018,12 +2030,22 @@ void MainWindow::generateAPResultsOfDirectedMutation()
     // contador de cadenas resultantes
     int i=1;
 
+    // primera linea leida
+    bool first = true;
+
     // valor de latencia maxima para luego generar el grafico con este limite
     int maxLatency = 0;
 
     while (!in.atEnd())
     {
         QString line = in.readLine();
+
+        if (useSmartIndividual && first)
+        {
+            first = false;
+            continue;
+        }
+
         //QString line = "1,39.02,0,2,39.02,0,3,39.02,0,4,39.02,0,5,39.02,0,6,39.02,0,7,39.02,0,8,39.02,0,9,39.02,0,10,39.02,0,11,39.02,0";
         qDebug("linea leida %s", qPrintable(line));
         sequenceConfidenceInterval = processLine(line);
@@ -2363,11 +2385,21 @@ void MainWindow::generateMutatedResultsTable()
         system(qPrintable(program));
     }else if (individualSize == 11)
     {
+        QString script;
+        if (useSmartIndividual)
+        {
+            script = "/processResultsWithoutArrowMutatedSize11-v3.sh ";
+        }
+        else
+        {
+            script = "/processResultsWithoutArrowMutatedSize11-v2.sh ";
+        }
+
         // copiar el archivo processResultsWithoutArrowMutatedSize11.sh al directorio de resultados
-        program = "cp "+ home + "/processResultsWithoutArrowMutatedSize11-v2.sh "+ resultsDirectory ;
+        program = "cp "+ home + script + resultsDirectory ;
         system(qPrintable(program));
 
-        program = "cd " + resultsDirectory + "; " + home + "/processResultsWithoutArrowMutatedSize11-v2.sh";
+        program = "cd " + resultsDirectory + "; " + home + script;
         system(qPrintable(program));
     }
     else

@@ -1247,7 +1247,7 @@ void Simulation::createSmartPopulationWithCTable()
 
     Individual * individuo;
     // agregar 10 individuos identicos a la cadena de referencia de iOS
-    for (int i=0; i<5; i++)
+    for (int i=0; i<10; i++)
     {
         //individuo = new Individual(true, "1,39,0,2,39,0,3,39,0,4,39,0,5,39,0,6,39,0,7,39,0,8,39,0,9,39,0,10,39,0,11,39,0");
         individuo = new Individual(true, initialSequence);
@@ -1267,7 +1267,7 @@ void Simulation::createSmartPopulationWithCTable()
 
     Individual * offspring;
 
-    for (int i=0; i<15; i++)
+    for (int i=0; i<10; i++)
     {
 
         offspring = ctable->getNewIndividualFromCTable(father);

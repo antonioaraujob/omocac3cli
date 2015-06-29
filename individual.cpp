@@ -7,6 +7,7 @@
 #include <QStringList>
 #include <QString>
 
+#include "cmath"
 #include "scan.h"
 
 
@@ -730,13 +731,13 @@ void Individual::calculateDiscoveryValue()
         // ********************************************************************************************************
         // codigo para probar la suma simple de los APs encontrados
 
-
+        /*
         // suma de los valores de AP por canal
         for (int i=0; i<individualSize; i++)
         {
             discovery = discovery + parametersList.at((i*4)+3);
         }
-
+        */
         // ********************************************************************************************************
 
 
@@ -757,7 +758,7 @@ void Individual::calculateDiscoveryValue()
         //    discovery = discovery + getAPsByChannel(channel, min, max);
         //}
 
-        //discovery = getAPsByAllChannels();
+        discovery = getAPsByAllChannels();
         //qDebug(qPrintable(QString::number(discovery)));
 
         // ********************************************************************************************************
@@ -1428,17 +1429,40 @@ double Individual::getAPsByAllChannels()
 
 
         double APsByChannel = 0;
-
+        /*
         if (APmax < APmin)
         {
             APsByChannel = APmin/min;
         }
         else
         {
-            APsByChannel = APmin/min + (APmax-APmin)/max;
+            if (max ==0)
+            {
+                APsByChannel = APmin/min;
+            }
+            else
+            {
+                APsByChannel = APmin/min + (APmax-APmin)/max;
+            }
+
+        }
+        discovery = discovery + APsByChannel;
+
+        */
+
+        // si max es cero no se suman los aps encontrados con max
+        if (max ==0)
+        {
+            discovery = discovery + APmin/min;
+        }
+        else
+        {
+            discovery = discovery + APmin/min + std::abs(APmax-APmin)/max;
         }
 
-        discovery = discovery + APsByChannel;
+
+
+
 
     } // fin de iteracion por cada canal
 
