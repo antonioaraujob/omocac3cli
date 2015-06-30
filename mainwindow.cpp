@@ -87,6 +87,10 @@ double MainWindow::upperMaxChannelTime = 0;
  */
 int MainWindow::indexToSortCTable = 0;
 
+/**
+ * @brief Define e inicializa el miembro estatico useOF1Index
+ */
+bool MainWindow::useOF1Index = false;
 
 MainWindow::MainWindow()
 {
@@ -156,6 +160,8 @@ MainWindow::MainWindow()
     lowerMaxChannelTime = settings.value("limiteInferiorMaxChannelTime").toDouble();
 
     upperMaxChannelTime = settings.value("limiteSuperiorMaxChannelTime").toDouble();
+
+    useOF1Index = settings.value("usarIndiceFO1").toBool();
 
     resultsDirectory = "";
 
@@ -1214,8 +1220,12 @@ void MainWindow::reportIndividualOrderedByApInGenes(QList<Individual*> list, QSt
         str.append(QString::number(ind->getPerformanceLatency()));
 
         // para reportar nscans
+        //str.append(",");
+        //str.append(QString::number(ind->getNscanForMutation()));
+
+        // para reportar suma simple de APs
         str.append(",");
-        str.append(QString::number(ind->getNscanForMutation()));
+        str.append(QString::number(ind->getSimpleAPsum()));
 
         str.append("\n");
         out << str;
@@ -2547,6 +2557,9 @@ QString MainWindow::askTopologyPerformanceSmartIndividual()
    return result;
 }
 
-
+bool MainWindow::getUseOF1Index()
+{
+    return useOF1Index;
+}
 
 

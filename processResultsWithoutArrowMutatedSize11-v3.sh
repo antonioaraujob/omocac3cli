@@ -45,12 +45,12 @@ echo "
 \rowcolors{1}{white}{light-gray}
 
 %\begin{tabularx}{\textwidth}{XXXXXXXXXXXrr}
-\begin{tabularx}{\textwidth}{|XXXXXXXXXXX|m{1cm}|m{1cm}|}
+\begin{tabularx}{\textwidth}{|XXXXXXXXXXX|m{1cm}|m{1cm}|m{1cm}|}
 
 %\begin{tabular}{lrrrrrrrrrrrr}
 \hline
 %\multicolumn{11}{l}{Ch$<\$min,max\$>\rightarrow\$AP} & \$FO_1\$ & \$FO_2\$ \\""\\
-\multicolumn{11}{|l|}{Ch\newline\$<\$min,max\$>\rightarrow\$AP} & \$FO_1\$\newline(\#AP) & \$FO_2\$\newline(ms) \\""\\
+\multicolumn{11}{|l|}{Ch\newline\$<\$min,max\$>\rightarrow\$AP} & \$FO_1\$\newline(\#AP) & \$FO_2\$\newline(ms) & AP \\""\\
 \hline
 " >> salida.tex
 
@@ -202,7 +202,7 @@ BEGIN {
 	}
 	
 		
-        print gen1" & "gen2" & "gen3" & "gen4" & "gen5" & "gen6" & "gen7" & "gen8" & "gen9" & "gen10" & "gen11 " & " $45" & "$46 "\134\134" ;
+        print gen1" & "gen2" & "gen3" & "gen4" & "gen5" & "gen6" & "gen7" & "gen8" & "gen9" & "gen10" & "gen11 " & " $45" & "$46 "&" $47"\134\134" ;
         if (NR =="1")
         {
             print "\hline";

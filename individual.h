@@ -399,6 +399,13 @@ public:
      * @return valor de FO1
      */
     double getAPsByAllChannels();
+
+    /**
+     * @brief Retorna la suma simple de los APs encontrados en los canales del individuo de acuerdo a los
+     * temporizadores min y max
+     * @return suma simple de los APs encontrados en los canales del individuo
+     */
+    double getSimpleAPsum();
 };
 
 #endif // INDIVIDUAL_H

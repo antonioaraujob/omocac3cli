@@ -689,7 +689,7 @@ QString Individual::getIndividualAsQString()
     individualString.append(QString::number(getPerformanceLatency()));
 
     individualString.append(",");
-    individualString.append(QString::number(getNscanForMutation()));
+    individualString.append(QString::number(getSimpleAPsum()));
 
     qDebug("getIndividualAsQString()");
     qDebug(qPrintable(individualString));
@@ -727,41 +727,44 @@ void Individual::calculateDiscoveryValue()
 
     if (getEmulateScanning())
     {
-
-        // ********************************************************************************************************
-        // codigo para probar la suma simple de los APs encontrados
-
-        /*
-        // suma de los valores de AP por canal
-        for (int i=0; i<individualSize; i++)
+        if (MainWindow::getUseOF1Index())
         {
-            discovery = discovery + parametersList.at((i*4)+3);
+            // ********************************************************************************************************
+            // codigo para probar la funcion objetivo:
+            //      Sumatoria_i (AP_descubiertos_con_min)/minchannel_i) + ((AP_descubiertos_con_max)/maxchannel_i)
+
+            //int channel = 0;
+            //double min = 0;
+            //double max = 0;
+
+            // suma de los valores de AP por canal
+            //for (int i=0; i<individualSize; i++)
+            //{
+            //    channel = parametersList.at(i*4);
+            //    min = parametersList.at(i*4+1);
+            //    max = parametersList.at(i*4+2);
+            //    discovery = discovery + getAPsByChannel(channel, min, max);
+            //}
+
+            discovery = getAPsByAllChannels();
+            //qDebug(qPrintable(QString::number(discovery)));
+
+            // ********************************************************************************************************
         }
-        */
-        // ********************************************************************************************************
+        else // suma simple de APs
+        {
+            // ********************************************************************************************************
+            // codigo para probar la suma simple de los APs encontrados
 
 
-        // ********************************************************************************************************
-        // codigo para probar la funcion objetivo:
-        //      Sumatoria_i (AP_descubiertos_con_min)/minchannel_i) + ((AP_descubiertos_con_max)/maxchannel_i)
+            // suma de los valores de AP por canal
+            for (int i=0; i<individualSize; i++)
+            {
+                discovery = discovery + parametersList.at((i*4)+3);
+            }
 
-        //int channel = 0;
-        //double min = 0;
-        //double max = 0;
-
-        // suma de los valores de AP por canal
-        //for (int i=0; i<individualSize; i++)
-        //{
-        //    channel = parametersList.at(i*4);
-        //    min = parametersList.at(i*4+1);
-        //    max = parametersList.at(i*4+2);
-        //    discovery = discovery + getAPsByChannel(channel, min, max);
-        //}
-
-        discovery = getAPsByAllChannels();
-        //qDebug(qPrintable(QString::number(discovery)));
-
-        // ********************************************************************************************************
+            // ********************************************************************************************************
+        }
 
 
         // ********************************************************************************************************
@@ -1467,4 +1470,16 @@ double Individual::getAPsByAllChannels()
     } // fin de iteracion por cada canal
 
     return discovery;
+}
+
+double Individual::getSimpleAPsum()
+{
+    double APs = 0;
+
+    // suma de los valores de AP por canal
+    for (int i=0; i<individualSize; i++)
+    {
+        APs = APs + parametersList.at((i*4)+3);
+    }
+    return APs;
 }

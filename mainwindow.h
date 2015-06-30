@@ -182,6 +182,11 @@ private:
     static double upperMaxChannelTime;
 
     /**
+     * @brief Especifica si se debe utilizar el indice de FO1 APmin/min + APmax/max
+     */
+    static bool useOF1Index;
+
+    /**
      * @brief Cadena que especifica el directorio de resultados de la ejecucion del algoritmo
      */
     QString resultsDirectory;
@@ -609,6 +614,13 @@ public:
      * @return
      */
     QString askTopologyPerformanceSmartIndividual();
+
+    /**
+     * @brief Retorna el valor del parametro del algoritmo que especifica si se debe usar
+     * indice de la FO1
+     */
+    static bool getUseOF1Index();
+
 };
 
 #endif // MAINWINDOW_H
