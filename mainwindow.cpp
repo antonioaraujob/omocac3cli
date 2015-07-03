@@ -1225,7 +1225,7 @@ void MainWindow::reportIndividualOrderedByApInGenes(QList<Individual*> list, QSt
 
         // para reportar suma simple de APs
         str.append(",");
-        str.append(QString::number(ind->getSimpleAPsum()));
+        str.append(QString::number(ind->getPerformanceDiscovery()));
 
         str.append("\n");
         out << str;
