@@ -437,14 +437,25 @@ void Selection::makeTournamentsWithNewRules(Individual * individual, QList<Indiv
             qDebug("   adversary domina a individual");
             adversary->incrementWonMatchesCounter();
         }
-        else // los individuos son comparables, o sus valores de funcion objetivo son iguales
+        else // los individuos son *NO* comparables, o sus valores de funcion objetivo son iguales
         {
-            // latencia de individual <= adversary : gana A
-            if (individual->getPerformanceLatency() <= adversary->getPerformanceLatency())
+            // ganará aquel que tenga una proporción mayor de descubierta de acuerdo a:
+            // FO_NC = #APmin/MinCT + #APmax/MaxCT
+
+            double individualFONC = individual->getAPsByAllChannels();
+            double adversaryFONC = adversary->getAPsByAllChannels();
+
+            if (individualFONC > adversaryFONC)
             {
                 individual->incrementWonMatchesCounter();
-            }else // latencia de individual > adversary : gana B
+            }
+            else if (individualFONC < adversaryFONC)
             {
+                adversary->incrementWonMatchesCounter();
+            }
+            else
+            {
+                individual->incrementWonMatchesCounter();
                 adversary->incrementWonMatchesCounter();
             }
         }

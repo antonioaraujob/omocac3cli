@@ -115,7 +115,9 @@ public:
      * en caso contrario
      *      gana adversario
      *
-     * si
+     * si ambos individuos son *NO* comparables entonces
+     *      ganará aquel que tenga una proporción mayor de descubierta de acuerdo a:
+     *      FO_NC = #APmin/MinCT + #APmax/MaxCT
      *
      *
      * @param individual individuo que se enfrentara a los adversarios
