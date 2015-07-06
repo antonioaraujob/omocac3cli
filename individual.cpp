@@ -1523,28 +1523,7 @@ double Individual::getFONC()
         setParameter(c*4+3, APmax);
 
 
-        double APsByChannel = 0;
         /*
-        if (APmax < APmin)
-        {
-            APsByChannel = APmin/min;
-        }
-        else
-        {
-            if (max ==0)
-            {
-                APsByChannel = APmin/min;
-            }
-            else
-            {
-                APsByChannel = APmin/min + (APmax-APmin)/max;
-            }
-
-        }
-        discovery = discovery + APsByChannel;
-
-        */
-
         // si max es cero no se suman los aps encontrados con max
         if (max ==0)
         {
@@ -1554,6 +1533,12 @@ double Individual::getFONC()
         {
             discovery = discovery + APmin/min + std::abs(APmax-APmin)/max;
         }
+        */
+
+
+        // para probar con solo considerar el termino de minchanneltime
+        discovery = discovery + APmin/min;
+
 
     } // fin de iteracion por cada canal
 
