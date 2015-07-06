@@ -1,4 +1,6 @@
 #include "selection.h"
+#include "mainwindow.h"
+
 #include <cmath>
 
 
@@ -442,21 +444,24 @@ void Selection::makeTournamentsWithNewRules(Individual * individual, QList<Indiv
             // ganará aquel que tenga una proporción mayor de descubierta de acuerdo a:
             // FO_NC = #APmin/MinCT + #APmax/MaxCT
 
-            double individualFONC = individual->getAPsByAllChannels();
-            double adversaryFONC = adversary->getAPsByAllChannels();
+            double individualFONC = individual->getFONC();
+            double adversaryFONC = adversary->getFONC();
 
-            if (individualFONC > adversaryFONC)
+            if ( (individualFONC > adversaryFONC) && (individual->getPerformanceLatency() < MainWindow::getSmartIndividualLatency()) )
             {
                 individual->incrementWonMatchesCounter();
             }
-            else if (individualFONC < adversaryFONC)
+            else if ( (individualFONC < adversaryFONC) && (adversary->getPerformanceLatency() < MainWindow::getSmartIndividualLatency()) )
             {
                 adversary->incrementWonMatchesCounter();
             }
             else
             {
-                individual->incrementWonMatchesCounter();
-                adversary->incrementWonMatchesCounter();
+                if (individualFONC == adversaryFONC)
+                {
+                    individual->incrementWonMatchesCounter();
+                    adversary->incrementWonMatchesCounter();
+                }
             }
         }
     } // fin del for de recorrido de la lista de adversarios

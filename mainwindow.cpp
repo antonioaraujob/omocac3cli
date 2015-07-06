@@ -92,6 +92,11 @@ int MainWindow::indexToSortCTable = 0;
  */
 bool MainWindow::useOF1Index = false;
 
+/**
+ * @brief Define e inicializa el miembro estatico smartIndividualLatency
+ */
+double MainWindow::smartIndividualLatency = 0;
+
 MainWindow::MainWindow()
 {
     // lectura de los parametros del algoritmo cultural a partir del archivo ini
@@ -148,6 +153,8 @@ MainWindow::MainWindow()
     useSmartIndividual = settings.value("usarIndividuosInteligentes").toBool();
 
     smartIndividualSequence = settings.value("cadenaIndividuoInteligente").toString();
+
+    smartIndividualLatency = settings.value("latenciaIndividuoInteligente").toDouble();
 
     ctableWindow = settings.value("tamanoDeVentanaCTable").toInt();
 
@@ -2562,4 +2569,7 @@ bool MainWindow::getUseOF1Index()
     return useOF1Index;
 }
 
-
+double MainWindow::getSmartIndividualLatency()
+{
+    return smartIndividualLatency;
+}

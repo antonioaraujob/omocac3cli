@@ -187,6 +187,12 @@ private:
     static bool useOF1Index;
 
     /**
+     * @brief Especifica la latencia del individuo inteligente pasado para la creacion
+     * de individuos de la poblacion.
+     */
+    static double smartIndividualLatency;
+
+    /**
      * @brief Cadena que especifica el directorio de resultados de la ejecucion del algoritmo
      */
     QString resultsDirectory;
@@ -620,6 +626,12 @@ public:
      * indice de la FO1
      */
     static bool getUseOF1Index();
+
+    /**
+     * @brief Retorna la latencia del individuo inteligente utilizado para generar la población inicial
+     * @return latencia del individuo inteligente utilizado para generar la población inicial
+     */
+    static double getSmartIndividualLatency();
 
 };
 

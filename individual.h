@@ -401,6 +401,16 @@ public:
     double getAPsByAllChannels();
 
     /**
+     * @brief Retorna el valor de FO1 de acuerdo a la formula:
+     * La formula utilizada para obtener el valor de la FO en el canal i es la siguiente:
+     *
+     * Fo_i = (AP_descubiertos_con_min)/min + (AP_descubiertos_con_max)/max
+     *
+     * @return valor de FO1
+     */
+    double getFONC();
+
+    /**
      * @brief Retorna la suma simple de los APs encontrados en los canales del individuo de acuerdo a los
      * temporizadores min y max
      * @return suma simple de los APs encontrados en los canales del individuo
