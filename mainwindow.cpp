@@ -1221,8 +1221,8 @@ void MainWindow::reportIndividualOrderedByApInGenes(QList<Individual*> list, QSt
 
         }
 
-
-        str.append(QString::number(ind->getPerformanceDiscovery()));
+        double discovery = ind->getPerformanceDiscovery();
+        str.append(QString::number(discovery));
         str.append(",");
         str.append(QString::number(ind->getPerformanceLatency()));
 
@@ -1232,7 +1232,7 @@ void MainWindow::reportIndividualOrderedByApInGenes(QList<Individual*> list, QSt
 
         // para reportar suma simple de APs
         str.append(",");
-        str.append(QString::number(ind->getPerformanceDiscovery()));
+        str.append(QString::number(discovery));
 
         str.append("\n");
         out << str;
