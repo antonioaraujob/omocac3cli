@@ -10,7 +10,7 @@ class Gen
 private:
     int channel;
     double maxChannelTime;
-    double minCHannelTime;
+    double minChannelTime;
     double APs;
 
 public:
@@ -69,6 +69,12 @@ public:
      * @param aps APs a asignar
      */
     void setAPs(double aps);
+
+    /**
+     * @brief Retorna el valor del indice FONC para el gen
+     * @return valor del indice FONC para el gen
+     */
+    double getFONC();
 
 
 };

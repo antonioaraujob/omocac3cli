@@ -1093,7 +1093,11 @@ void MainWindow::reportIndividualOrderedByApInGenes(QList<Individual*> list, QSt
     // lista de genes a ordenar
     QList<Gen*> genList;
 
+    // cadena que almacenara todos los parametros del individuo
     QString str;
+
+    // valor del indice FONC del individuo
+    double sumFonc = 0;
 
     // iterar sobre los individuos de la lista
     for (int h=0; h<list.count();h++)
@@ -1207,6 +1211,7 @@ void MainWindow::reportIndividualOrderedByApInGenes(QList<Individual*> list, QSt
             // reordenar la lista en caso de existan genes con igual numero de APs con respecto a la latencia
             QList<Gen*> reorderListByAP = reorderAP(invertedList, true);
 
+
             //for(int i=0; i<invertedList.size(); i++)
             for(int i=0; i<reorderListByAP.count(); i++)
             {
@@ -1217,6 +1222,11 @@ void MainWindow::reportIndividualOrderedByApInGenes(QList<Individual*> list, QSt
                     str.append(",");
                 }
 
+                // obtener el valor del indice FONC asociado al gen y agregarlo a la cadena del individuo
+                double genFonc = reorderListByAP.at(i)->getFONC();
+                str.append(QString::number(genFonc));
+                str.append(",");
+                sumFonc = sumFonc + genFonc;
             }
 
         }
@@ -1231,8 +1241,13 @@ void MainWindow::reportIndividualOrderedByApInGenes(QList<Individual*> list, QSt
         //str.append(QString::number(ind->getNscanForMutation()));
 
         // para reportar suma simple de APs
+        //str.append(",");
+        //str.append(QString::number(discovery));
+
+        // para reportar el indico FONC del individuo
         str.append(",");
-        str.append(QString::number(discovery));
+        str.append(QString::number(sumFonc));
+        sumFonc = 0;
 
         str.append("\n");
         out << str;
@@ -2405,7 +2420,7 @@ void MainWindow::generateMutatedResultsTable()
         QString script;
         if (useSmartIndividual)
         {
-            script = "/processResultsWithoutArrowMutatedSize11-v3.sh ";
+            script = "/processResultsWithoutArrowMutatedSize11-v4.sh ";
         }
         else
         {
