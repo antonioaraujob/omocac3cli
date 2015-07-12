@@ -1879,9 +1879,16 @@ QList<double> MainWindow::processLine(QString line, bool individualBase)
         }
         else
         {
+            /*
             newList.append(tmpList.at(i*4));
             newList.append(tmpList.at(i*4+1));
             newList.append(tmpList.at(i*4+2));
+            */
+
+            // (i*5) porque se esta considerando la cadena <ch,min,max,aps,fonc>...<aps,L,fonc_total>
+            newList.append(tmpList.at(i*5));
+            newList.append(tmpList.at(i*5+1));
+            newList.append(tmpList.at(i*5+2));
         }
 
 
@@ -1900,7 +1907,11 @@ QList<double> MainWindow::processLine(QString line, bool individualBase)
     }
     else
     {
-         latency = tmpList.at(individualSize*4+1);
+        //latency = tmpList.at(individualSize*4+1);
+
+        // en el caso de <ch,min,max,aps,fonc>
+        latency = tmpList.at(individualSize*5+1);
+
     }
 
 
