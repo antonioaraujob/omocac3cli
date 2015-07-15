@@ -461,18 +461,18 @@ double Mutation::mutateIndividualParameter(int index, int mean, double std, doub
         //qDebug("   isThisParameterAMinChannelTime(index)");
         int randomValue = qRound(minChannelTimeDistribution(generator));
         intYi = randomValue + currentParameterValue;
-        if (intYi <= 5)
+        if (intYi <= MainWindow::getLowerMinChannelTime())
         {
             //qDebug("   el minChannelTime mutado esta por debajo del limite (index %d)", index);
-            while(intYi <=5)
+            while(intYi <= MainWindow::getLowerMinChannelTime())
             {
                 yi = minChannelTimeDistribution(generator);
                 intYi = qRound(yi);
             }
         }
-        if (intYi > 15)
+        if (intYi > MainWindow::getUpperMinChannelTime())
         {
-            intYi = 15;
+            intYi = MainWindow::getUpperMinChannelTime();
             //qDebug("   el minChannelTime mutado esta por encima del limite (index %d)", index);
         }
         Q_ASSERT_X( ((MainWindow::getLowerMinChannelTime()<=intYi) && (intYi<=MainWindow::getUpperMinChannelTime())),
@@ -485,14 +485,14 @@ double Mutation::mutateIndividualParameter(int index, int mean, double std, doub
         //qDebug("   isThisParameterAMaxChannelTime(index)");
         int randomValue = qRound(maxChannelTimeDistribution(generator));
         intYi = randomValue + currentParameterValue;
-        if (intYi < 10)
+        if (intYi < MainWindow::getLowerMaxChannelTime())
         {
-            intYi = 10;
+            intYi = MainWindow::getLowerMaxChannelTime();
             //qDebug("   el maxChannelTime mutado esta por debajo del limite (index %d)", index);
         }
-        if (intYi > 90)
+        if (intYi > MainWindow::getUpperMaxChannelTime())
         {
-            intYi = 90;
+            intYi = MainWindow::getUpperMaxChannelTime();
             //qDebug("   el maxChannelTime mutado esta por encima del limite (index %d)", index);
         }
         Q_ASSERT_X( ((MainWindow::getLowerMaxChannelTime()<=intYi) && (intYi<=MainWindow::getUpperMaxChannelTime())),
