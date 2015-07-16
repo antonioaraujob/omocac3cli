@@ -110,7 +110,7 @@ double Gen::getFONC()
         // si maxChannelTime es cero no se suman los aps encontrados con max
         if (maxChannelTime ==0)
         {
-            fonc = (APmin/minChannelTime)*0.2;
+            fonc = (APmin/minChannelTime);
         }
         else
         {
@@ -122,7 +122,7 @@ double Gen::getFONC()
         // si maxChannelTime es cero no se suman los aps encontrados con max
         if (maxChannelTime ==0)
         {
-            fonc = (APmin/minChannelTime)*0.4;
+            fonc = (APmin/minChannelTime);
         }
         else
         {
@@ -134,7 +134,7 @@ double Gen::getFONC()
         // si maxChannelTime es cero no se suman los aps encontrados con max
         if (maxChannelTime ==0)
         {
-            fonc = (APmin/minChannelTime)*0.6;
+            fonc = (APmin/minChannelTime);
         }
         else
         {
