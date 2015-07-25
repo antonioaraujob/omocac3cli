@@ -272,6 +272,10 @@ void Mutation::doDirectedMutation(QList<Individual *> population, double std, do
 
             // hacer la mutacion dirigida
             directedMutation(ctable, father);
+
+            // descomentar la siguiente linea para ejecutar la mutacion dirigida con modificacion
+            // de min y max de los genes que estan fuera de la ventana
+            //directedMutation(ctable, father, stdMin, stdMax);
         }
         else
         {
@@ -443,6 +447,7 @@ double Mutation::mutateIndividualParameter(int index, int mean, double std, doub
     //if (isThisParameterAChannel(index))
     if (isThisParameterAChannel(index, offspring->getIndividualSize()))
     {
+
         //qDebug("   isThisParameterAChannel(index)");
         intYi = getRandom(1,11);
 
@@ -454,6 +459,11 @@ double Mutation::mutateIndividualParameter(int index, int mean, double std, doub
         }
         channelsUsedForMutation[intYi]=true;
         //qDebug(qPrintable("   channel despues de mutado: "+QString::number(intYi)));
+
+
+        // descomentar para no mutar el canal de forma aleatoria
+        //intYi = currentParameterValue;
+
     }
     //else if (isThisParameterAMinChannelTime(index))
     else if (isThisParameterAMinChannelTime(index, offspring->getIndividualSize()))
@@ -1484,6 +1494,77 @@ void Mutation::directedMutation(CTable * ct, Individual * father)
     newPopulation.append(offspring);
 }
 
+
+void Mutation::directedMutation(CTable * ct, Individual * father, double stdMin, double stdMax)
+{
+    QList<CTableGen *> windowGenesList = ct->getWindowGenes();
+    Individual * offspring = new Individual(*father);
+
+    QList<CTableGen*> convertedIndividual = ct->convertIndividualToCTableGen(offspring);
+
+    CTableGen * gen;
+    CTableGen * tmpGen;
+
+    int index = 0;
+
+    for (int i=0; i< windowGenesList.size(); i++)
+    {
+        gen = windowGenesList.at(i);
+
+        // gen temporal del hijo
+        tmpGen = convertedIndividual.at(i);
+
+        // indice del canal en el cual se debe colocar el nuevo canal
+        index = ct->searchChannelInList(gen->getChannel(), convertedIndividual);
+
+        // solo reemplazar
+        if (index == -1)
+        {
+            convertedIndividual.replace(i, gen);
+        }else{ // permutar
+            convertedIndividual.replace(i,gen);
+            convertedIndividual.replace(index, tmpGen);
+        }
+        index = 0;
+    }
+
+    // en este punto ya convertedIndividual esta completamente mutado, ahora devolver el cambio
+    for (int i=0; i<offspring->getIndividualSize(); i++)
+    {
+        offspring->setParameter((i*4), convertedIndividual.at(i)->getChannel());
+        offspring->setParameter(((i*4)+1), convertedIndividual.at(i)->getMinChannelTime());
+        offspring->setParameter(((i*4)+2), convertedIndividual.at(i)->getMaxChannelTime());
+        offspring->setParameter(((i*4)+3), convertedIndividual.at(i)->getAPs());
+    }
+    qDebug("revisa");
+
+    // *******************************************************
+    // ahora se deben mutar los min y max de los genes tamanoIndividuo-w
+
+    int window = windowGenesList.size();
+    int start = window*4;
+
+    double newParameterValue = 0;
+
+    for (int i=start; i<father->getNumberOfParameters(); i++)
+    {
+        newParameterValue = mutateIndividualParameter(i, 0, 1, stdMin, stdMax, father->getParameter(i), offspring);
+        offspring->setParameter(i, newParameterValue);
+    }
+
+
+
+    // *******************************************************
+
+    offspring->getAverageOnFullScanning();
+
+    offspring->calculateDiscoveryValue();
+    offspring->calculateLatencyValue();
+
+    // agregar el individuo padre y el individuo hijo a la lista newPopulation para mantener tamano 2p
+    newPopulation.append(father);
+    newPopulation.append(offspring);
+}
 
 
 

@@ -229,6 +229,16 @@ public:
     void directedMutation(CTable * ct, Individual *father);
 
     /**
+     * @brief Ejecuta el proceso de mutacion dirigida
+     *
+     * @param ct tabla C del espacio de creencias
+     * @param father individuo padre
+     * @param stdMin desviacion estandar de min
+     * @param stdMax desviacion estandar de max
+     */
+    void directedMutation(CTable * ct, Individual * father, double stdMin, double stdMax);
+
+    /**
      * @brief Asigna la desviacion estandar para la mutacion
      * @param std desviacion estandar para la mutacion
      */
