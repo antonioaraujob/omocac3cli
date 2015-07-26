@@ -271,11 +271,11 @@ void Mutation::doDirectedMutation(QList<Individual *> population, double std, do
             setStdDeviation(std);
 
             // hacer la mutacion dirigida
-            directedMutation(ctable, father);
+            //directedMutation(ctable, father);
 
             // descomentar la siguiente linea para ejecutar la mutacion dirigida con modificacion
             // de min y max de los genes que estan fuera de la ventana
-            //directedMutation(ctable, father, stdMin, stdMax);
+            directedMutation(ctable, father, stdMin, stdMax);
         }
         else
         {
@@ -447,6 +447,134 @@ double Mutation::mutateIndividualParameter(int index, int mean, double std, doub
     //if (isThisParameterAChannel(index))
     if (isThisParameterAChannel(index, offspring->getIndividualSize()))
     {
+        /*
+        //qDebug("   isThisParameterAChannel(index)");
+        intYi = getRandom(1,11);
+
+        // verificar que el canal no se haya utilizado en mutaciones anteriores
+        while (channelsUsedForMutation.value(intYi))
+        {
+            // seleccionar otro canal que no se haya seleccionado
+            intYi = getRandom(1,11);
+        }
+        channelsUsedForMutation[intYi]=true;
+        //qDebug(qPrintable("   channel despues de mutado: "+QString::number(intYi)));
+        */
+
+        // descomentar para no mutar el canal de forma aleatoria
+        intYi = currentParameterValue;
+
+    }
+    //else if (isThisParameterAMinChannelTime(index))
+    else if (isThisParameterAMinChannelTime(index, offspring->getIndividualSize()))
+    {
+        //qDebug("   isThisParameterAMinChannelTime(index)");
+        int randomValue = qRound(minChannelTimeDistribution(generator));
+        intYi = randomValue + currentParameterValue;
+        if (intYi <= MainWindow::getLowerMinChannelTime())
+        {
+            //qDebug("   el minChannelTime mutado esta por debajo del limite (index %d)", index);
+            while(intYi <= MainWindow::getLowerMinChannelTime())
+            {
+                yi = minChannelTimeDistribution(generator);
+                intYi = qRound(yi);
+            }
+        }
+        if (intYi > MainWindow::getUpperMinChannelTime())
+        {
+            intYi = MainWindow::getUpperMinChannelTime();
+            //qDebug("   el minChannelTime mutado esta por encima del limite (index %d)", index);
+        }
+        Q_ASSERT_X( ((MainWindow::getLowerMinChannelTime()<=intYi) && (intYi<=MainWindow::getUpperMinChannelTime())),
+                    "mutateIndividualParameter()", qPrintable(QString::number(intYi)));
+        //qDebug(qPrintable("   minChannelTime despues de mutado: "+QString::number(intYi)));
+    }
+    //else if (isThisParameterAMaxChannelTime(index))
+    else if (isThisParameterAMaxChannelTime(index, offspring->getIndividualSize()))
+    {
+        //qDebug("   isThisParameterAMaxChannelTime(index)");
+        int randomValue = qRound(maxChannelTimeDistribution(generator));
+        intYi = randomValue + currentParameterValue;
+        if (intYi < MainWindow::getLowerMaxChannelTime())
+        {
+            intYi = MainWindow::getLowerMaxChannelTime();
+            //qDebug("   el maxChannelTime mutado esta por debajo del limite (index %d)", index);
+        }
+        if (intYi > MainWindow::getUpperMaxChannelTime())
+        {
+            intYi = MainWindow::getUpperMaxChannelTime();
+            //qDebug("   el maxChannelTime mutado esta por encima del limite (index %d)", index);
+        }
+        Q_ASSERT_X( ((MainWindow::getLowerMaxChannelTime()<=intYi) && (intYi<=MainWindow::getUpperMaxChannelTime())),
+                    "mutateIndividualParameter()", qPrintable(QString::number(intYi)));
+        //qDebug(qPrintable("   maxChannelTime despues de mutado: "+QString::number(intYi)));
+    }
+    //else if (isThisParameterAPs(index))
+    //else if (isThisParameterAPs(index, offspring->getIndividualSize()))
+    else
+    {
+        //qDebug("   isThisParameterAPs(index)");
+        //if (intYi<0)
+        //{
+        //    intYi = 0;
+        //}
+
+        intYi = getNewParameterAPs(offspring->getParameter(index-3),
+                                   offspring->getParameter(index-2),
+                                   offspring->getParameter(index-1),
+                                   offspring->getNscanForMutation());
+
+        Q_ASSERT_X( (intYi>= 0), "mutateIndividualParameter()", qPrintable(QString::number(intYi)) );
+
+        if (intYi < 0)
+        {
+            qDebug(qPrintable("*********   APs despues de mutado NEGATIVO: "+QString::number(intYi)));
+        }
+
+        qDebug(qPrintable("   APs despues de mutado: "+QString::number(intYi)));
+    }
+
+    qDebug(qPrintable("   ----intYi justo antes de return: "+QString::number(intYi)));
+    return intYi;
+}
+
+double Mutation::mutateIndividualParameterModified(int index, int mean, double std, double stdMin, double stdMax,
+                                        double currentParameterValue, Individual * offspring, QList<int> busyChannels)
+{
+    // mean representa el parametro sobre el cual se va a mutar
+    // std la desviacion estandar de la distribucion normal
+
+    // tomado de http://www.cplusplus.com/reference/random/normal_distribution/
+
+    std::default_random_engine generator;
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    generator.seed(seed);
+
+    std::normal_distribution<double>  distribution(mean,std);
+
+    std::normal_distribution<double>  minChannelTimeDistribution(mean, stdMin);
+
+    std::normal_distribution<double>  maxChannelTimeDistribution(mean, stdMax);
+
+    double yi = distribution(generator);
+
+    //qDebug("--Mutar parametro de individuo--");
+    //qDebug("   valor de la distribucion normal: %d, %d", mean, std);
+    //qDebug(qPrintable(QString::number(yi)));
+
+    // redondear el yi
+    double intYi = qRound(yi);
+
+    //if (isThisParameterAChannel(index))
+    if (isThisParameterAChannel(index, offspring->getIndividualSize()))
+    {
+
+        // ocupar los canales de la ventana
+        for (int i=0; i< busyChannels.size(); i++)
+        {
+            channelsUsedForMutation[busyChannels.at(i)]=true;
+        }
+
 
         //qDebug("   isThisParameterAChannel(index)");
         intYi = getRandom(1,11);
@@ -537,7 +665,6 @@ double Mutation::mutateIndividualParameter(int index, int mean, double std, doub
     qDebug(qPrintable("   ----intYi justo antes de return: "+QString::number(intYi)));
     return intYi;
 }
-
 
 
 bool Mutation::isThisParameterAChannel(int index)
@@ -1507,9 +1634,13 @@ void Mutation::directedMutation(CTable * ct, Individual * father, double stdMin,
 
     int index = 0;
 
+    QList<int> busyChannels;
+
     for (int i=0; i< windowGenesList.size(); i++)
     {
         gen = windowGenesList.at(i);
+
+        busyChannels.append(gen->getChannel());
 
         // gen temporal del hijo
         tmpGen = convertedIndividual.at(i);
@@ -1548,11 +1679,22 @@ void Mutation::directedMutation(CTable * ct, Individual * father, double stdMin,
 
     for (int i=start; i<father->getNumberOfParameters(); i++)
     {
-        newParameterValue = mutateIndividualParameter(i, 0, 1, stdMin, stdMax, father->getParameter(i), offspring);
+        // funcion de mutacion de parametros original
+        //newParameterValue = mutateIndividualParameter(i, 0, 1, stdMin, stdMax, offspring->getParameter(i), offspring);
+
+        // funcion utilizada para el caso de prueba de modficar min y max de los genes restantes despues de W
+        newParameterValue = mutateIndividualParameterModified(i, 0, 1, stdMin, stdMax, offspring->getParameter(i), offspring, busyChannels);
         offspring->setParameter(i, newParameterValue);
     }
 
+    // limpiar lista de canales utilizados por W
+    busyChannels.clear();
 
+    // se muto el offspring ahora limpiar el diccionario de canales usados
+    for (int c=1; c<=11;c++)
+    {
+        channelsUsedForMutation[c]=false;
+    }
 
     // *******************************************************
 

@@ -130,6 +130,21 @@ public:
     double mutateIndividualParameter(int index, int mean, double std, double stdMin, double stdMax, double currentParameterValue, Individual *offspring);
 
     /**
+     * @brief Ejecuta la mutacion de parametros restantes de los IndividualSize-w genes para la mutacion dirigida
+     * @param index
+     * @param mean
+     * @param std
+     * @param stdMin
+     * @param stdMax
+     * @param currentParameterValue
+     * @param offspring
+     * @param busyChannels
+     * @return
+     */
+    double mutateIndividualParameterModified(int index, int mean, double std, double stdMin, double stdMax,
+                                             double currentParameterValue, Individual *offspring, QList<int> busyChannels);
+
+    /**
      * @brief Retorna verdadero si el parametro a revisar de un individuo corresponde a un canal
      * @param index indice del parametro a revisar del individuo
      * @return Verdadero si el indice corresponde a un parametro de numero de canal
