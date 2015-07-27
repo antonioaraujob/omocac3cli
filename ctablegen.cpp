@@ -3,6 +3,7 @@
 #include <QString>
 
 #include "scan.h"
+#include "mainwindow.h"
 
 CTableGen::CTableGen(int ch, double min, double max, double ap, double indA, double indB, double indC)
 {
@@ -263,4 +264,113 @@ void CTableGen::calculateIndexC()
     }
 
     indexC = foc;
+}
+
+
+double CTableGen::getFONC()
+{
+    // verificar el parametro indiceParaOrdenarTablaC que especifica el indice a utilizar
+    int index = MainWindow::getIndexToSortCTable();
+
+    QString database("test_18.1.db");
+
+    // tipo de experimento para extraer las muestras: full -> full scanning
+    QString experiment("full");
+
+    //Scan scan(database.toStdString(),experiment.toStdString());
+    ScanningCampaing scan(database.toStdString(),experiment.toStdString(), 0);
+    scan.init();
+    scan.prepareIRD();
+
+    // sumatorio de APs en min
+    double minAPsum = 0;
+
+    // APs promedio encontrados con min
+    double APmin = 0;
+
+    // sumatorio de APs en min
+    double maxAPsum = 0;
+
+    // APs promedio encontrados con min
+    double APmax = 0;
+
+    // valor del indice para el gen
+    double fonc = 0;
+
+    for (int i=0; i<30; i++)
+    {
+        // (ch, min, 0) corresponde a los APs encontrados con minchanneltime
+        minAPsum = minAPsum + scan.getAPs(channel, minChannelTime, 0);
+    }
+    APmin = minAPsum/30;
+
+    for (int i=0; i<30; i++)
+    {
+        // (ch, min, max) corresponde a los APs encontrados con maxchanneltime
+        maxAPsum = maxAPsum + scan.getAPs(channel, minChannelTime, maxChannelTime);
+    }
+    APmax = maxAPsum/30;
+
+    if (index == 0)
+    {
+        // si maxChannelTime es cero no se suman los aps encontrados con max
+        if (maxChannelTime ==0)
+        {
+            fonc = (APmin/minChannelTime);
+        }
+        else
+        {
+            fonc = (APmin/minChannelTime)*0.2 + (std::abs(APmax-APmin)/maxChannelTime)*0.8;
+        }
+    }
+    else if (index == 1)
+    {
+        // si maxChannelTime es cero no se suman los aps encontrados con max
+        if (maxChannelTime ==0)
+        {
+            fonc = (APmin/minChannelTime);
+        }
+        else
+        {
+            fonc = (APmin/minChannelTime)*0.4 + (std::abs(APmax-APmin)/maxChannelTime)*0.6;
+        }
+    }
+    else // index == 2
+    {
+        // si maxChannelTime es cero no se suman los aps encontrados con max
+        if (maxChannelTime ==0)
+        {
+            fonc = (APmin/minChannelTime);
+        }
+        else
+        {
+            fonc = (APmin/minChannelTime)*0.6 + (std::abs(APmax-APmin)/maxChannelTime)*0.4;
+        }
+    }
+    return fonc;
+}
+
+double CTableGen::calculateAPs()
+{
+
+    QString database("test_18.1.db");
+
+    // tipo de experimento para extraer las muestras: full -> full scanning
+    QString experiment("full");
+
+    ScanningCampaing scan(database.toStdString(),experiment.toStdString(), 0);
+    scan.init();
+    scan.prepareIRD();
+
+    // sumatorio de APs
+    double apSum = 0;
+
+    double apsAvg = 0;
+
+    for (int i=0; i<30; i++)
+    {
+        apSum = apSum + scan.getAPs(channel, minChannelTime, maxChannelTime);
+    }
+    apsAvg = apSum/30;
+    return apsAvg;
 }

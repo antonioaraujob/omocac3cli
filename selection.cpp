@@ -441,6 +441,61 @@ void Selection::makeTournamentsWithNewRules(Individual * individual, QList<Indiv
         }
         else // los individuos son *NO* comparables, o sus valores de funcion objetivo son iguales
         {
+
+            double individualAPs = individual->getPerformanceDiscovery();
+            double adversaryAPs = adversary->getPerformanceDiscovery();
+
+            double individualLatency = individual->getPerformanceLatency();
+            double adversaryLatency = adversary->getPerformanceLatency();
+
+            double individualFONC = individual->getFONC();
+            double adversaryFONC = adversary->getFONC();
+
+            double A = 0;
+            double B = 0;
+            bool AisAdversary = false;
+
+            if (individualAPs < adversaryAPs)
+             {
+                A = individualLatency;
+                B = adversaryLatency;
+                AisAdversary = false;
+            }
+            else
+            {
+                A = adversaryLatency;
+                B = individualLatency;
+                AisAdversary = true;
+            }
+
+            if ( (A < MainWindow::getSmartIndividualLatency()) && (B > MainWindow::getSmartIndividualLatency()) )
+            {
+                // A wins
+                if (AisAdversary)
+                    adversary->incrementWonMatchesCounter();
+                else
+                    individual->incrementWonMatchesCounter();
+            }
+            else if (A > MainWindow::getSmartIndividualLatency())
+            {
+                // no one wins
+                // try to analyse this case for later use.
+            }
+            else
+            {
+                // ( (A < MainWindow::getSmartIndividualLatency()) && (B < MainWindow::getSmartIndividualLatency()) )
+
+                if (individualFONC > adversaryFONC)
+                {
+                    individual->incrementWonMatchesCounter();
+                }
+                else
+                {
+                    adversary->incrementWonMatchesCounter();
+                }
+            }
+
+
             /*
             // ganará aquel que tenga una proporción mayor de descubierta de acuerdo a:
             // FO_NC = #APmin/MinCT + #APmax/MaxCT
@@ -466,7 +521,7 @@ void Selection::makeTournamentsWithNewRules(Individual * individual, QList<Indiv
             }
             */
 
-
+            /*
             // ganará aquel que tenga una proporción mayor de descubierta de acuerdo a:
             // mayor numero de APs siempre que el individuo respete la latencia sugerida
 
@@ -489,6 +544,8 @@ void Selection::makeTournamentsWithNewRules(Individual * individual, QList<Indiv
                     adversary->incrementWonMatchesCounter();
                 }
             }
+            */
+
         }
     } // fin del for de recorrido de la lista de adversarios
 }

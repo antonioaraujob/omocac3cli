@@ -207,30 +207,57 @@ void CTable::reportCTableHistory(QString resultsDirectory)
     // lista temporal de genes
     QList<CTableGen *> tmpList;
 
+    double discovery = 0;
+    double latency = 0;
+    double fonc_total = 0;
 
+    double aps = 0;
+    double fonc = 0;
 
+    // iterar sobre individuos del registro
     for (int i = 0; i < historicSuperIndividualList.size(); i++)
     {
         tmpList = historicSuperIndividualList.at(i);
 
         CTableGen * gen;
 
+        // iterar sobre genes del individuo
         for (int j = 0; j < tmpList.size(); j++)
         {
             gen = tmpList.at(j);
+
+            aps = gen->calculateAPs();
+            fonc = gen->getFONC();
+
             stringLine.append(QString::number(gen->getChannel()));
             stringLine.append(",");
             stringLine.append(QString::number(gen->getMinChannelTime()));
             stringLine.append(",");
             stringLine.append(QString::number(gen->getMaxChannelTime()));
+            stringLine.append(",");
+            stringLine.append(QString::number(aps));
+            stringLine.append(",");
+            stringLine.append(QString::number(fonc));
+            stringLine.append(",");
 
-            if ( j!= (tmpList.size()-1) )
-            {
-                stringLine.append(",");
-            }
+            discovery = discovery + aps;
+            latency = latency + gen->getMinChannelTime() + gen->getMaxChannelTime();
+            fonc_total = fonc_total + fonc;
+
         }
+
+        stringLine.append(QString::number(discovery));
+        stringLine.append(",");
+        stringLine.append(QString::number(latency));
+        stringLine.append(",");
+        stringLine.append(QString::number(fonc_total));
         out << stringLine << "\n";
         stringLine.clear();
+
+        discovery = 0;
+        latency = 0;
+        fonc_total = 0;
+
     }
 
 }

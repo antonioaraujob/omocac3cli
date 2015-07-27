@@ -447,7 +447,7 @@ double Mutation::mutateIndividualParameter(int index, int mean, double std, doub
     //if (isThisParameterAChannel(index))
     if (isThisParameterAChannel(index, offspring->getIndividualSize()))
     {
-        /*
+
         //qDebug("   isThisParameterAChannel(index)");
         intYi = getRandom(1,11);
 
@@ -459,10 +459,10 @@ double Mutation::mutateIndividualParameter(int index, int mean, double std, doub
         }
         channelsUsedForMutation[intYi]=true;
         //qDebug(qPrintable("   channel despues de mutado: "+QString::number(intYi)));
-        */
+
 
         // descomentar para no mutar el canal de forma aleatoria
-        intYi = currentParameterValue;
+        //intYi = currentParameterValue;
 
     }
     //else if (isThisParameterAMinChannelTime(index))

@@ -2331,6 +2331,108 @@ void MainWindow::reportCTableHistory()
 {
 
     simulation->reportCTableHistory(resultsDirectory);
+
+    QString program;
+    QString home = QDir::currentPath();
+
+    if (individualSize == 1)
+    {
+        // copiar el archivo processCtableLogSize1.sh al directorio de resultados
+        program = "cp "+ home + "/processCtableLogSize1.sh "+ resultsDirectory ;
+        system(qPrintable(program));
+
+        program = "cd " + resultsDirectory + "; " + home + "/processCtableLogSize1.sh";
+        system(qPrintable(program));
+
+    }else if (individualSize == 2)
+    {
+        // copiar el archivo processCtableLogSize2.sh al directorio de resultados
+        program = "cp "+ home + "/processCtableLogSize2.sh "+ resultsDirectory ;
+        system(qPrintable(program));
+
+        program = "cd " + resultsDirectory + "; " + home + "/processCtableLogSize2.sh";
+        system(qPrintable(program));
+
+    } else if (individualSize == 3)
+    {
+        // copiar el archivo processCtableLogSize3.sh al directorio de resultados
+        program = "cp "+ home + "/processCtableLogSize3.sh "+ resultsDirectory ;
+        system(qPrintable(program));
+
+        program = "cd " + resultsDirectory + "; " + home + "/processCtableLogSize3.sh";
+        system(qPrintable(program));
+
+    } else if (individualSize == 4)
+    {
+        // copiar el archivo processCtableLogSize4.sh al directorio de resultados
+        program = "cp "+ home + "/processCtableLogSize4.sh "+ resultsDirectory ;
+        system(qPrintable(program));
+
+        program = "cd " + resultsDirectory + "; " + home + "/processCtableLogSize4.sh";
+        system(qPrintable(program));
+    } else if (individualSize == 5)
+    {
+        // copiar el archivo processCtableLogSize5.sh al directorio de resultados
+        program = "cp "+ home + "/processCtableLogSize5.sh "+ resultsDirectory ;
+        system(qPrintable(program));
+
+        program = "cd " + resultsDirectory + "; " + home + "/processCtableLogSize5.sh";
+        system(qPrintable(program));
+    } else if (individualSize == 6)
+    {
+        // copiar el archivo processCtableLogSize6.sh al directorio de resultados
+        program = "cp "+ home + "/processCtableLogSize6.sh "+ resultsDirectory ;
+        system(qPrintable(program));
+
+        program = "cd " + resultsDirectory + "; " + home + "/processCtableLogSize6.sh";
+        system(qPrintable(program));
+    } else if (individualSize == 7)
+    {
+        // copiar el archivo processCtableLogSize7.sh al directorio de resultados
+        program = "cp "+ home + "/processCtableLogSize7.sh "+ resultsDirectory ;
+        system(qPrintable(program));
+
+        program = "cd " + resultsDirectory + "; " + home + "/processCtableLogSize7.sh";
+        system(qPrintable(program));
+    } else if (individualSize == 8)
+    {
+        // copiar el archivo processCtableLogSize8.sh al directorio de resultados
+        program = "cp "+ home + "/processCtableLogSize8.sh "+ resultsDirectory ;
+        system(qPrintable(program));
+
+        program = "cd " + resultsDirectory + "; " + home + "/processCtableLogSize8.sh";
+        system(qPrintable(program));
+    } else if (individualSize == 9)
+    {
+        // copiar el archivo processCtableLogSize9.sh al directorio de resultados
+        program = "cp "+ home + "/processCtableLogSize9.sh "+ resultsDirectory ;
+        system(qPrintable(program));
+
+        program = "cd " + resultsDirectory + "; " + home + "/processCtableLogSize9.sh";
+        system(qPrintable(program));
+    } else if (individualSize == 10)
+    {
+        // copiar el archivo processCtableLogSize10.sh al directorio de resultados
+        program = "cp "+ home + "/processCtableLogSize10.sh "+ resultsDirectory ;
+        system(qPrintable(program));
+
+        program = "cd " + resultsDirectory + "; " + home + "processCtableLogSize10.sh";
+        system(qPrintable(program));
+    }else if (individualSize == 11)
+    {
+        QString script= "/processCtableLogSize11.sh ";
+
+        // copiar el archivo processCtableLogSize11.sh al directorio de resultados
+        program = "cp "+ home + script + resultsDirectory ;
+        system(qPrintable(program));
+
+        program = "cd " + resultsDirectory + "; " + home + script;
+        system(qPrintable(program));
+    }
+    else
+    {
+        Q_ASSERT_X(false, "MainWindow::reportCTableHistory()", "el tamano del individuo debe ser entre 1 y 11");
+    }
 }
 
 

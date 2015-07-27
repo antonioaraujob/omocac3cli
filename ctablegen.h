@@ -169,6 +169,18 @@ public:
      */
     void calculateIndexC();
 
+    /**
+     * @brief retorna el FONC del gen
+     * @return retorna el FONC del gen
+     */
+    double getFONC();
+
+    /**
+     * @brief Obtiene el numero de APs consultando la topologia
+     * @return numero de APs consultando la topologia
+     */
+    double calculateAPs();
+
 };
 
 #endif // CTABLEGEN_H
