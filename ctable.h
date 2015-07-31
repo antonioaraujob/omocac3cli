@@ -76,6 +76,12 @@ public:
     QList<CTableGen *> getWindowGenes();
 
     /**
+     * @brief Retorna la lista de los genes del superindividuo
+     * @return lista de los genes del superindividuo
+     */
+    QList<CTableGen *> getGenes();
+
+    /**
      * @brief Convierte un Individuo en una lista de CTableGen
      * @param ind invididuo a convertir
      * @return Individuo en la forma de una lista de CTableGen

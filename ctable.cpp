@@ -122,6 +122,11 @@ QList<CTableGen *> CTable::getWindowGenes()
     return windowGenesList;
 }
 
+QList<CTableGen *> CTable::getGenes()
+{
+    return genList;
+}
+
 
 QList<CTableGen*> CTable::convertIndividualToCTableGen(Individual* ind)
 {
