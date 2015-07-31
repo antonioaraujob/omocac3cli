@@ -1621,9 +1621,8 @@ void Mutation::directedMutation(CTable * ct, Individual * father)
     newPopulation.append(offspring);
 }
 
-/*
-// comentada para realizar la prueba del 30/07/15 de tomar los min y max del sind en los canales fuera de la ventana
-// cuando la descubierta del gen del offspring es <= 0.7
+
+// mutación de los genes de W y los genes restantes se mutan min y max de acuerdo a la distribución normal
 void Mutation::directedMutation(CTable * ct, Individual * father, double stdMin, double stdMax)
 {
     QList<CTableGen *> windowGenesList = ct->getWindowGenes();
@@ -1709,8 +1708,10 @@ void Mutation::directedMutation(CTable * ct, Individual * father, double stdMin,
     newPopulation.append(father);
     newPopulation.append(offspring);
 }
-*/
 
+
+
+/*
 // prueba del 30/07/15 de tomar los min y max del sind en los canales fuera de la ventana
 // cuando la descubierta del gen del offspring es <= 0.7
 void Mutation::directedMutation(CTable * ct, Individual * father, double stdMin, double stdMax)
@@ -1851,6 +1852,7 @@ void Mutation::directedMutation(CTable * ct, Individual * father, double stdMin,
     newPopulation.append(father);
     newPopulation.append(offspring);
 }
+*/
 
 
 void Mutation::setStdDeviation(double std)
