@@ -346,8 +346,8 @@ double CTableGen::getFONC()
         {
             //fonc = (APmin/minChannelTime)*0.6 + (std::abs(APmax-APmin)/maxChannelTime)*0.4;
 
-            // para prueba de simulation200gFONCNoFactor
-            fonc = (APmin/minChannelTime) + (std::abs(APmax-APmin)/maxChannelTime);
+            // para prueba de simulation200gFONC 0.7 y 0.3
+            fonc = (APmin/minChannelTime)*0.7 + (std::abs(APmax-APmin)/maxChannelTime)*0.3;
         }
     }
     return fonc;

@@ -1489,15 +1489,20 @@ double Individual::getFONC()
     scan.prepareIRD();
 
     int channel = 0;
-    double min = 0;
-    double max = 0;
+    double minChannelTime = 0;
+    double maxChannelTime = 0;
+    double fonc = 0;
+    double total_fonc = 0;
+
+    // verificar el parametro indiceParaOrdenarTablaC que especifica el indice a utilizar
+    int index = MainWindow::getIndexToSortCTable();
 
     // iterar por cada canal
     for (int c=0; c<individualSize; c++)
     {
         channel = parametersList.at(c*4);
-        min = parametersList.at(c*4+1);
-        max = parametersList.at(c*4+2);
+        minChannelTime = parametersList.at(c*4+1);
+        maxChannelTime = parametersList.at(c*4+2);
 
         // primer termino APmin/min
         double minAPsum = 0;
@@ -1505,7 +1510,7 @@ double Individual::getFONC()
         for (int i=0; i<30; i++)
         {
             // (ch, min, 0) corresponde a los APs encontrados con minchanneltime
-            minAPsum = minAPsum + scan.getAPs(channel, min, 0);
+            minAPsum = minAPsum + scan.getAPs(channel, minChannelTime, 0);
         }
         double APmin = minAPsum/30;
 
@@ -1515,34 +1520,55 @@ double Individual::getFONC()
         for (int i=0; i<30; i++)
         {
             // (ch, min, max) corresponde a los APs encontrados con maxchanneltime
-            maxAPsum = maxAPsum + scan.getAPs(channel, min, max);
+            maxAPsum = maxAPsum + scan.getAPs(channel, minChannelTime, maxChannelTime);
         }
         double APmax = maxAPsum/30;
 
-        // asignar el valor del numero de APs encontrados al canal
-        setParameter(c*4+3, APmax);
-
-
-        /*
-        // si max es cero no se suman los aps encontrados con max
-        if (max ==0)
+        if (index == 0)
         {
-            discovery = discovery + APmin/min;
+            // si maxChannelTime es cero no se suman los aps encontrados con max
+            if (maxChannelTime ==0)
+            {
+                fonc = (APmin/minChannelTime);
+            }
+            else
+            {
+                fonc = (APmin/minChannelTime)*0.2 + (std::abs(APmax-APmin)/maxChannelTime)*0.8;
+            }
         }
-        else
+        else if (index == 1)
         {
-            discovery = discovery + APmin/min + std::abs(APmax-APmin)/max;
+            // si maxChannelTime es cero no se suman los aps encontrados con max
+            if (maxChannelTime ==0)
+            {
+                fonc = (APmin/minChannelTime);
+            }
+            else
+            {
+                fonc = (APmin/minChannelTime)*0.4 + (std::abs(APmax-APmin)/maxChannelTime)*0.6;
+            }
         }
-        */
+        else // index == 2
+        {
+            // si maxChannelTime es cero no se suman los aps encontrados con max
+            if (maxChannelTime ==0)
+            {
+                fonc = (APmin/minChannelTime);
+            }
+            else
+            {
+                //fonc = (APmin/minChannelTime)*0.6 + (std::abs(APmax-APmin)/maxChannelTime)*0.4;
 
-
-        // para probar con solo considerar el termino de minchanneltime
-        discovery = discovery + APmin/min;
-
+                // para prueba de simulation200gFONC 0.7 y 0.3
+                fonc = (APmin/minChannelTime)*0.7 + (std::abs(APmax-APmin)/maxChannelTime)*0.3;
+            }
+        }
+        total_fonc = total_fonc + fonc;
+        fonc = 0;
 
     } // fin de iteracion por cada canal
 
-    return discovery;
+    return total_fonc;
 }
 
 double Individual::getSimpleAPsum()
